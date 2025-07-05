@@ -10,5 +10,5 @@ devise_scope :user do
   end
 end
 namespace :company do
-  resources :users
+  resources :customers
 end
