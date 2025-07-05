@@ -1,0 +1,15 @@
+:javascript
+  $(document).ready(function(){
+    var success_msg = "#{flash[:success]}"
+    var alert_msg   = "#{flash[:alert]}"
+    var delete_msg  = "#{flash[:delete]}"
+    var notice_msg  = "#{flash[:notice]}"
+    if (success_msg)
+      display_notify('success', success_msg);
+    if (alert_msg)
+      display_notify('warning', alert_msg);
+    if (delete_msg)
+      display_notify('danger', delete_msg);
+    if (notice_msg)
+      display_notify('info', notice_msg);
+  });

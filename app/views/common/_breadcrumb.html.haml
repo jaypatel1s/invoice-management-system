@@ -1,0 +1,37 @@
+.card-header.site_issue_box
+  .badge.badge-xl.py-6.w-100.px-0
+    .d-flex.align-items-center.flex-wrap.py-3
+      = base
+      %span.svg-icon.svg-icon-primary.mx-1
+        %svg{ fill: 'none', height: '18', viewbox: '0 0 18 18', width: '18', xmlns: 'http://www.w3.org/2000/svg' }
+          %path{ d: 'M9.4757 9.42436L6.33749 12.5626C6.02683 12.8732 6.02683 13.3769 6.33749
+            13.6876C6.64815 13.9982 7.15183 13.9982 7.46249 13.6876L11.6197 9.53041C11.9125
+            9.23753 11.9125 8.76263 11.6197 8.46976L7.46249 4.31258C7.15183 4.00193 6.64815
+            4.00193 6.33749 4.31258C6.02683 4.62324 6.02683 5.12693 6.33749 5.43758L9.4757
+            8.57581C9.71 8.81011 9.71 9.19006 9.4757 9.42436Z',
+            fill: 'black'
+          }
+      = base_action
+    .ms-auto
+      .original_back_btn
+        = link_to back_url, class: 'btn btn-sm btn-primary default-btn' do
+          %span.svg-icon.svg-icon-sm.svg-icon-muted.m-0
+            %svg{ fill: 'none', height: '18', viewbox: '0 0 18 18', width: '18', xmlns: 'http://www.w3.org/2000/svg' }
+              %path{ d: 'M8.44955 8.57581L11.5878 5.43758C11.8984 5.12693 11.8984 4.62324
+              11.5878 4.31258C11.2771 4.00193 10.7734 4.00193 10.4628 4.31258L6.30561
+              8.46976C6.01271 8.76263 6.01271 9.23753 6.30561 9.53041L10.4628 13.6876C10.7734
+              13.9982 11.2771 13.9982 11.5878 13.6876C11.8984 13.3769 11.8984 12.8732
+              11.5878 12.5626L8.44955 9.42436C8.21525 9.19006 8.21525 8.81011 8.44955 8.57581Z',
+              fill: 'white' }
+          Back
+      .wizard_back_btn.hide
+        %button.btn.btn-sm.btn-primary.default-btn.prev-step{ 'data-kt-stepper-action': 'next', type: 'button' }
+          %span.svg-icon.svg-icon-sm.svg-icon-muted.m-0
+            %svg{ fill: 'none', height: '18', viewbox: '0 0 18 18', width: '18', xmlns: 'http://www.w3.org/2000/svg' }
+              %path{ d: 'M8.44955 8.57581L11.5878 5.43758C11.8984 5.12693 11.8984 4.62324
+              11.5878 4.31258C11.2771 4.00193 10.7734 4.00193 10.4628 4.31258L6.30561
+              8.46976C6.01271 8.76263 6.01271 9.23753 6.30561 9.53041L10.4628 13.6876C10.7734
+              13.9982 11.2771 13.9982 11.5878 13.6876C11.8984 13.3769 11.8984 12.8732 11.5878
+              12.5626L8.44955 9.42436C8.21525 9.19006 8.21525 8.81011 8.44955 8.57581Z',
+              fill: 'white' }
+          Back

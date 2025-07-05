@@ -1,0 +1,17 @@
+%nav.sidebar.sidebar-offcanvas#sidebar
+  %ul.nav
+    %li.nav-item.nav-profile
+      %a.nav-link{ href: '#' }
+        .nav-profile-image
+          %span.login-status.online
+        .nav-profile-text.d-flex.flex-column
+          %span.font-weight-bold.text-break
+            = current_user.email
+      %li.nav-item{ class: menu_active_class('dashboard') }
+        %a.nav-link{ href: authenticated_user_path }
+          %i.fa.fa-home.menu-icon
+          %span.menu-title Dashboard
+      %li.nav-item{ class: menu_active_class('users') }
+        %a.nav-link{ href: company_users_path }
+          %i.fa.fa-users.menu-icon
+          %span.menu-title Users

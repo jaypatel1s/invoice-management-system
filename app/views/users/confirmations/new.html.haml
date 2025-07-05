@@ -1,0 +1,21 @@
+.container-scroller
+  .container-fluid.page-body-wrapper.full-page-wrapper
+    .content-wrapper.align-items-stretch.auth.auth-img-bg
+      .row.justify-content-center
+        .col-lg-6.mt-4.align-items-center
+          .auth-form.text-left
+            .brand-logo
+              %a{ href: '/' }
+                = image_tag 'common/logo.png', width: '100px', height: '100px'
+            %h4 Resend confirmation instructions
+            .pt-3
+            = form_with model: resource, local: true, url: confirmation_path(resource_name), method: :post do |f|
+              %div{ class: "form-group #{error?(resource.errors, :email)}" }
+                = f.label :email
+                = f.email_field :email, autofocus: true, autocomplete: 'email', value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), class: 'form-control', required: true, placeholder: 'Email'
+                = print_error(resource.errors, :email)
+              .my-3
+                = f.submit 'Resend confirmation instructions', class: 'btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn'
+              = render 'devise/shared/links'
+
+          = render 'devise/shared/footer'

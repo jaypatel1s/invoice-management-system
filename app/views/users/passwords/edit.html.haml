@@ -1,0 +1,28 @@
+.container-scroller
+  .container-fluid.page-body-wrapper.full-page-wrapper
+    .content-wrapper.align-items-stretch.auth.auth-img-bg
+      .row.justify-content-center
+        .col-lg-6.mt-4.align-items-center
+          .auth-form.text-left
+            .brand-logo
+              %a{ href: '/' }
+                = image_tag 'common/logo.png', width: '100px', height: '100px'
+            %h4 Forgot your password?
+            .pt-3
+            = form_with model: resource, local: true, url: password_path(resource_name), method: :put do |f|
+              = render "users/shared/error_messages", resource: resource
+              = f.hidden_field :reset_password_token
+              %div{ class: "form-group #{error?(resource.errors, :password)}" }
+                = f.label :password
+                = f.password_field :password, autofocus: true, autocomplete: 'password', class: 'form-control', required: true, placeholder: 'New password'
+                = print_error(resource.errors, :password)
+              %div{ class: "form-group #{error?(resource.errors, :password_confirmation)}" }
+                = f.label :password_confirmation
+                = f.password_field :password_confirmation, autofocus: true, autocomplete: 'password_confirmation', class: 'form-control', required: true, placeholder: 'Confirm password_confirmation'
+                = print_error(resource.errors, :password_confirmation)
+
+              .my-3
+                = f.submit 'Update password', class: 'btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn'
+              = render 'devise/shared/links'
+
+          = render 'devise/shared/footer'

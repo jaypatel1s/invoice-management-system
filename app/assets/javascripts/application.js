@@ -1,0 +1,16 @@
+//= require jquery/jquery.min
+//= require jquery_ujs
+//= require turbolinks
+//= require jquery-ui/jquery-ui.min
+//= require popper/popper.min.js
+//= require bootstrap/bootstrap.min
+//= require select2/select2.min
+//= require moment/moment.min
+//= require bootstrap/datetimepicker.min
+//= require daterangepicker/daterangepicker.min
+//= require daterangepicker/custom
+//= require notify/notify
+//= require jquery-tags/jquery-tags
+//= require cocoon
+//= require trix
+//= require custom/misc

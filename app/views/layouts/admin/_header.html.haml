@@ -1,0 +1,18 @@
+%nav.navbar.navbar-primary.default-layout-navbar.col-lg-12.col-12.p-0.fixed-top.d-flex.flex-row
+  .text-center.navbar-brand-wrapper.d-flex.align-items-center.justify-content-center
+    %a.navbar-brand.brand-logo{href: '/'}
+      = image_tag 'common/logo.png'
+    %a.navbar-brand.brand-logo-mini{href: '/'}
+      = image_tag 'common/logo.png'
+  .navbar-menu-wrapper.d-flex.align-items-stretch
+    %button.navbar-toggler.navbar-toggler.align-self-center{'data-toggle': 'minimize', type: 'button'}
+      %span.fa.fa-bars
+    %ul.navbar-nav.navbar-nav-right
+      %li.nav-item
+        %a.nav-link{href: authenticated_user_path}
+          My Profile
+      %li.nav-item
+        %a.nav-link{href: destroy_user_session_path, 'data-method': 'delete'}
+          %i.fa.fa-power-off
+    %button.navbar-toggler.navbar-toggler-right.d-lg-none.align-self-center{'data-toggle': 'offcanvas', type: 'button'}
+      %span.fa.fa-bars
