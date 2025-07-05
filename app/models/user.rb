@@ -4,4 +4,5 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,:confirmable, :lockable, :timeoutable, :trackable, timeout_in: 30.minutes
   belongs_to :company
+  has_many :customers, dependent: :destroy
 end
