@@ -11,4 +11,10 @@ devise_scope :user do
 end
 namespace :company do
   resources :customers
+  resources :products
+  resources :invoices do
+    member do
+      get :download_pdf
+    end
+  end
 end

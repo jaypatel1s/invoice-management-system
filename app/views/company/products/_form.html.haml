@@ -1,0 +1,32 @@
+.row
+  .col-md-12.grid-margin.stretch-card
+    .card
+      .card-body
+        = form_with model: [:invoice, @product], local: true, html: { multipart: true }, url: url, class: 'form' do |f|
+          .row
+            %div{ class: "col-md-6 form-group #{ error?(@product.errors, :name) }" }
+              = f.label :name, class: 'col-form-label' do
+                Name
+                %span
+                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Name' }
+              = f.text_field :name, class: 'form-control', autocomplete: 'off', placeholder: 'Product name'
+              = print_error(@product.errors, :name)
+            %div{ class: "col-md-6 form-group #{ error?(@product.errors, :description) }" }
+              = f.label :description, class: 'col-form-label' do
+                Description
+                %span
+                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Description' }
+              = f.text_field :description, class: 'form-control', autocomplete: 'off', placeholder: 'Description'
+              = print_error(@product.errors, :description)
+          .row
+            %div{ class: "col-md-6 form-group #{ error?(@product.errors, :price) }" }
+              = f.label :price, class: 'col-form-label' do
+                Price
+                %span
+                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Price' }
+              = f.text_field :price, class: 'form-control', autocomplete: 'off', placeholder: 'Price'
+              = print_error(@product.errors, :price)
+
+          .row.mt-4
+            .col-12
+              = f.submit "Submit", class: "btn btn-primary btn-block"
