@@ -1,0 +1,43 @@
+.content-wrapper
+  .page-header.row
+    .col-md-7
+      %h3.page-title
+        %span.page-title-icon.bg-primary.text-white.mr-2
+          %i.fa.fa-file
+        Invoices
+    .col-md-5.mt-2.mt-md-0.text-right
+      %a.btn.btn-sm.btn-primary{ href: new_company_invoice_path, data: { toggle: 'tooltip', placement: 'left '}, title: 'New Invoice' }
+        %i.fa.fa-plus
+
+  .row
+    .col-12.grid-margin
+      .card
+        .card-body
+          - if @invoices.present?
+            .table-responsive
+              %table.table.table-hover
+                %thead
+                  %tr.table-primary
+                    %th Invoice Number
+                    %th Date
+                    %th Due Date
+                    %th Status
+                    %th Note
+                    %th.text-right{ width: '10%','data-orderable': 'false' } Actions
+                %tbody
+                  - @invoices.each do |invoice|
+                    %tr
+                      %td= invoice.invoice_number
+                      %td= invoice.date
+                      %td= invoice.due_date
+                      %td= invoice.status
+                      %td= invoice.note
+                      %td= link_to 'Download PDF', download_pdf_company_invoice_path(invoice, format: :pdf), class: 'btn btn-secondary'
+                      %td.text-right
+                        = link_to raw("<i class='fa fa-eye'></i>"), company_invoice_path(invoice.id), { class: 'btn-sm btn-warning px-2 py-1', 'data-toggle': 'tooltip', title: 'Show' }
+                        = link_to raw("<i class='fa fa-pencil-square-o'></i>"), edit_company_invoice_path(invoice.id), { class: 'btn-sm btn-warning px-2 py-1', 'data-toggle': 'tooltip', title: 'Edit' }
+                        = link_to raw("<i class='fa fa-trash-o'></i>"), company_invoice_path(invoice.id), { class: 'btn-sm btn-danger px-2 py-1', 'data-toggle': 'tooltip', 'data-confirm': 'Are you sure?', title: 'Delete', method: :delete }
+          - else
+            %center
+              %h6
+                No Invoice Found.

@@ -1,0 +1,66 @@
+.row
+  .col-md-12.grid-margin.stretch-card
+    .card
+      .card-body
+        = form_with model: [:invoice, @invoice], local: true, html: { multipart: true }, url: url, class: 'form' do |f|
+          .row
+            %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :invoice_number) }" }
+              = f.label :invoice_number, class: 'col-form-label' do
+                Invoice Number
+                %span
+                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Invoice Number' }
+              = f.text_field :invoice_number, class: 'form-control', autocomplete: 'off', placeholder: 'Invoice Number'
+              = print_error(@invoice.errors, :invoice_number)
+            %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :date) }" }
+              = f.label :date, class: 'col-form-label' do
+                Date
+                %span
+                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Date' }
+              = f.text_field :date, class: 'form-control datetimepicker', autocomplete: 'off', placeholder: 'Date'
+              = print_error(@invoice.errors, :date)
+            %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :due_date) }" }
+              = f.label :date, class: 'col-form-label' do
+                Due Date
+                %span
+                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Due Date' }
+              = f.text_field :due_date, class: 'form-control datetimepicker', autocomplete: 'off', placeholder: 'Due Date'
+              = print_error(@invoice.errors, :due_date)
+            %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :status) }" }
+              = f.label :status, class: 'col-form-label' do
+                Status
+                %span
+                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Status' }
+              = f.text_field :status, class: 'form-control', autocomplete: 'off', placeholder: 'Status'
+              = print_error(@invoice.errors, :status)
+          .row
+            %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :note) }" }
+              = f.label :status, class: 'col-form-label' do
+                Note
+                %span
+                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Note' }
+              = f.text_field :note, class: 'form-control', autocomplete: 'off', placeholder: 'Note'
+              = print_error(@invoice.errors, :note)
+            %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :customer_id) }" }
+              = f.label :customer_id, class: 'col-form-label' do
+                Select Customer
+                %span
+                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Note' }
+              = f.select :customer_id, @customers.map { |customer| [customer.name, customer.id] }, {}, class: "form-control"
+              = print_error(@invoice.errors, :customer_id)
+
+          .row.mt-4
+            .col-12
+              = f.submit "Submit", class: "btn btn-primary btn-block"
+
+- content_for :js_code do
+  :javascript
+    $(document).on('turbolinks:load', function(){
+      $('.datetimepicker').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        minDate: moment(),
+        locale: {
+          format: 'DD-MM-YYYY'
+        }
+      });
+    });

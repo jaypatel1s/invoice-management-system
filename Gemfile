@@ -26,6 +26,9 @@ gem 'sass-rails', '>= 6'
 gem 'trix-rails', require: 'trix'
 gem 'uglifier', '>= 1.3.0'
 gem 'webauthn'
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary' # This provides the wkhtmltopdf executable
+
 
 # Background job adapter
 # gem 'importmap-rails'
