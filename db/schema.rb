@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_05_060626) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_06_083751) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -35,6 +35,32 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_05_060626) do
     t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_customers_on_company_id"
     t.index ["user_id"], name: "index_customers_on_user_id"
+  end
+
+  create_table "invoices", force: :cascade do |t|
+    t.string "invoice_number"
+    t.date "date"
+    t.date "due_date"
+    t.string "status"
+    t.text "note"
+    t.bigint "company_id", null: false
+    t.bigint "customer_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_invoices_on_company_id"
+    t.index ["customer_id"], name: "index_invoices_on_customer_id"
+    t.index ["user_id"], name: "index_invoices_on_user_id"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.decimal "price"
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_products_on_company_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -68,5 +94,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_05_060626) do
 
   add_foreign_key "customers", "companies"
   add_foreign_key "customers", "users"
+  add_foreign_key "invoices", "companies"
+  add_foreign_key "invoices", "customers"
+  add_foreign_key "invoices", "users"
+  add_foreign_key "products", "companies"
   add_foreign_key "users", "companies"
 end

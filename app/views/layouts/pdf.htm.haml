@@ -1,0 +1,8 @@
+!!! 5
+%html
+  %head
+    %meta{ charset: "utf-8" }
+    %title Invoice PDF
+    = wicked_pdf_stylesheet_link_tag "pdf"  # Optional: if you have PDF-specific CSS
+  %body
+    = yield
