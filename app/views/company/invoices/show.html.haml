@@ -1,0 +1,29 @@
+.content-wrapper
+  .page-header.row
+    .col-md-7
+      %h3.page-title
+        %span.page-title-icon.bg-primary.text-white.mr-2
+          %i.fa.fa-file
+        Invoice
+        %small
+          %i.fa.fa-arrow-right
+          Show
+    .col-md-5.mt-2.mt-md-0.text-right
+      %a.btn.btn-sm.btn-success{ href: company_products_path, data: {toggle: 'tooltip', placement: 'left'}, title: 'Invoices' }
+        %i.fa.fa-reply
+  .card.bg-white.border-0.rounded-3.mb-4
+    .card-body.p-0
+      .default-table-area.style-two.default-table-width
+        .table-responsive
+          %table.table.align-middle
+            %thead
+              %tr
+                %th{ scope: "col" } Name
+                %th{ scope: "col" } Description
+                %th{ scope: "col" } Price
+            %tbody
+              %tr
+                %td.text-body= @product.name
+                %td.text-body= @product.description
+                %td.text-body= @product.price
+

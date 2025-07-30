@@ -1,0 +1,17 @@
+%h1
+  Invoice #{@invoice.invoice_number}
+%p
+  %strong Date:
+  = @invoice.date.strftime('%d-%m-%Y')
+%p
+  %strong Due Date:
+  = @invoice.due_date.strftime('%d-%m-%Y')
+%p
+  %strong Status:
+  = @invoice.status
+%p
+  %strong Note:
+  = @invoice.note
+%p
+  %strong Customer:
+  = @invoice.customer.name
