@@ -2,7 +2,7 @@
   .col-md-12.grid-margin.stretch-card
     .card
       .card-body
-        = form_with model: [:school, customer], local: true, html: { multipart: true }, url: url, class: 'form' do |f|
+        = form_with model: [:company, customer], local: true, html: { multipart: true }, url: url, class: 'form' do |f|
           .row
             %div{ class: "col-md-6 form-group #{ error?(customer.errors, :name) }" }
               = f.label :name, class: 'col-form-label' do

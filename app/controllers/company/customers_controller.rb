@@ -52,7 +52,7 @@ class Company
     end
 
     def set_customer
-      @customer = current_user.customers.find(params[:id])
+      @customer = current_user.customers.find_by(id: params[:id])
       return if @customer.present?
 
       flash[:alert] = 'Customer not found.'
