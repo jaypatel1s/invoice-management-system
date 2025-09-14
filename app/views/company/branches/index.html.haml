@@ -1,0 +1,48 @@
+.content-wrapper
+  .page-header.row
+    .col-md-7
+      %h3.page-title
+        %span.page-title-icon.bg-primary.text-white.mr-2
+          %i.fa.fa-file
+        Branches
+    - if can_access?(:branches, :new)
+      .col-md-5.mt-2.mt-md-0.text-right
+        %a.btn.btn-sm.btn-primary{ href: new_company_branch_path, data: { toggle: 'tooltip', placement: 'left '}, title: 'New Branch' }
+          %i.fa.fa-plus
+
+  .row
+    .col-12.grid-margin
+      .card
+        .card-body
+          - if @branches.present?
+            .table-responsive
+              %table.table.table-hover
+                %thead
+                  %tr.table-primary
+                    %th Name
+                    %th Code
+                    %th Email
+                    %th Phone
+                    %th Address
+                    - if can_access?(:branches, :destroy)
+                      %th.text-right{ width: '10%','data-orderable': 'false' } Actions
+                %tbody
+                  - @branches.each do |branch|
+                    %tr
+                      %td= branch.name
+                      %td= branch.code
+                      %td= branch.email
+                      %td= branch.phone
+                      %td= branch.address
+                      - if can_access?(:branches, :edit) || can_access?(:branches, :destroy)
+                        %td.text-right
+                          - if can_access?(:branches, :edit)
+                            = link_to raw("<i class='fa fa-pencil-square-o'></i>"), edit_company_branch_path(branch.id),
+                              class: 'btn-sm btn-warning px-2 py-1', 'data-toggle': 'tooltip', title: 'Edit'
+                          - if can_access?(:branches, :destroy)
+                            = link_to raw("<i class='fa fa-trash-o'></i>"), company_branch_path(branch.id),
+                              class: 'btn-sm btn-danger px-2 py-1', 'data-toggle': 'tooltip', 'data-confirm': 'Are you sure?', title: 'Delete', method: :delete
+          - else
+            %center
+              %h6
+                No Branches Found.

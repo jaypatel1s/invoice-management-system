@@ -1,0 +1,23 @@
+.row
+  .col-md-12.grid-margin.stretch-card
+    .card
+      .card-body
+        = form_with model: [:company, branch_stock], local: true, html: { multipart: true }, class: 'form' do |f|
+          .row
+            %div{ class: "col-md-6 form-group #{ error?(branch_stock.errors, :name) }" }
+              = f.label :name, class: 'col-form-label' do
+                Quantity
+                %span
+                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Quantity' }
+              = f.number_field :quantity, class: 'form-control', autocomplete: 'off', placeholder: 'Quantity'
+              = print_error(branch_stock.errors, :quantity)
+            %div{ class: "col-md-6 form-group #{ error?(branch_stock.errors, :name) }" }
+              = f.label :product_id, class: 'col-form-label' do
+                Product
+                %span
+                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Product' }
+              = f.select :product_id, options_for_select(current_company.products.map { |product| [product.name, product.id]}), { include_blank: 'Select Product' }, class: 'form-control select2-field', required: true
+              = print_error(branch_stock.errors, :product)
+          .row.mt-4
+            .col-12
+              = f.submit "Submit", class: "btn btn-primary btn-block"

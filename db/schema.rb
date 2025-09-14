@@ -10,9 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_06_083751) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_14_062411) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "branch_stocks", force: :cascade do |t|
+    t.bigint "branch_id", null: false
+    t.bigint "product_id", null: false
+    t.integer "quantity", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["branch_id", "product_id"], name: "index_branch_stocks_on_branch_id_and_product_id", unique: true
+    t.index ["branch_id"], name: "index_branch_stocks_on_branch_id"
+    t.index ["product_id"], name: "index_branch_stocks_on_product_id"
+  end
+
+  create_table "branches", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.string "name", null: false
+    t.string "code"
+    t.string "address"
+    t.string "phone"
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_branches_on_company_id"
+  end
 
   create_table "companies", force: :cascade do |t|
     t.string "name"
@@ -63,6 +86,38 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_06_083751) do
     t.index ["company_id"], name: "index_products_on_company_id"
   end
 
+  create_table "stock_movements", force: :cascade do |t|
+    t.bigint "branch_id", null: false
+    t.bigint "product_id", null: false
+    t.integer "quantity", null: false
+    t.integer "movement_type", default: 0, null: false
+    t.string "reference_type"
+    t.bigint "reference_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["branch_id"], name: "index_stock_movements_on_branch_id"
+    t.index ["product_id"], name: "index_stock_movements_on_product_id"
+    t.index ["reference_type", "reference_id"], name: "index_stock_movements_on_reference_type_and_reference_id"
+  end
+
+  create_table "stock_transfer_requests", force: :cascade do |t|
+    t.bigint "source_branch_id", null: false
+    t.bigint "destination_branch_id", null: false
+    t.bigint "product_id", null: false
+    t.bigint "requested_by_id", null: false
+    t.bigint "approved_by_id"
+    t.integer "quantity", null: false
+    t.integer "status", default: 0
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["approved_by_id"], name: "index_stock_transfer_requests_on_approved_by_id"
+    t.index ["destination_branch_id"], name: "index_stock_transfer_requests_on_destination_branch_id"
+    t.index ["product_id"], name: "index_stock_transfer_requests_on_product_id"
+    t.index ["requested_by_id"], name: "index_stock_transfer_requests_on_requested_by_id"
+    t.index ["source_branch_id"], name: "index_stock_transfer_requests_on_source_branch_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -85,6 +140,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_06_083751) do
     t.datetime "locked_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "branch_id"
+    t.integer "role"
+    t.index ["branch_id"], name: "index_users_on_branch_id"
     t.index ["company_id"], name: "index_users_on_company_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -92,11 +150,22 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_06_083751) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  add_foreign_key "branch_stocks", "branches"
+  add_foreign_key "branch_stocks", "products"
+  add_foreign_key "branches", "companies"
   add_foreign_key "customers", "companies"
   add_foreign_key "customers", "users"
   add_foreign_key "invoices", "companies"
   add_foreign_key "invoices", "customers"
   add_foreign_key "invoices", "users"
   add_foreign_key "products", "companies"
+  add_foreign_key "stock_movements", "branches"
+  add_foreign_key "stock_movements", "products"
+  add_foreign_key "stock_transfer_requests", "branches", column: "destination_branch_id"
+  add_foreign_key "stock_transfer_requests", "branches", column: "source_branch_id"
+  add_foreign_key "stock_transfer_requests", "products"
+  add_foreign_key "stock_transfer_requests", "users", column: "approved_by_id"
+  add_foreign_key "stock_transfer_requests", "users", column: "requested_by_id"
+  add_foreign_key "users", "branches"
   add_foreign_key "users", "companies"
 end

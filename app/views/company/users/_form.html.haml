@@ -1,0 +1,54 @@
+.row
+  .col-md-12.grid-margin.stretch-card
+    .card
+      .card-body
+        = form_with model: [:company, user], local: true, html: { multipart: true }, class: 'form' do |f|
+          .row
+            %div{ class: "col-md-6 form-group #{ error?(user.errors, :name) }" }
+              = f.label :name, class: 'col-form-label' do
+                Name
+                %span
+                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Name' }
+              = f.text_field :name, class: 'form-control', autocomplete: 'off', placeholder: 'name'
+              = print_error(user.errors, :name)
+            %div{ class: "col-md-6 form-group #{ error?(user.errors, :name) }" }
+              = f.label :name, class: 'col-form-label' do
+                Branch
+                %span
+                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Branch' }
+              = f.select :branch_id, options_for_select(current_company.branches.map { |branch| [branch.name, branch.id]}), {include_blank: 'Select Branch'}, class: 'form-control select2-field', required: true
+              = print_error(user.errors, :branch)
+          .row
+            %div{ class: "col-md-6 form-group #{ error?(user.errors, :role) }" }
+              = f.label :role, class: 'col-form-label' do
+                Role
+                %span
+                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Select Role' }
+              = f.select :role, User.roles.keys.map { |role| [t("roles.#{role}"), role] }, {include_blank: 'Select Role'}, class: 'form-control select2-field', required: true
+              = print_error(user.errors, :role)
+            %div{ class: "col-md-6 form-group #{ error?(user.errors, :email) }" }
+              = f.label :email, class: 'col-form-label' do
+                Email
+                %span
+                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Email' }
+              = f.email_field :email, class: 'form-control', autocomplete: 'off', placeholder: 'Email'
+              = print_error(user.errors, :email)
+          - if params[:action] != 'edit'
+            .row
+              %div{ class: "col-md-6 form-group #{ error?(user.errors, :password) }" }
+                = f.label :password, class: 'col-form-label' do
+                  Password
+                  %span
+                    %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Password' }
+                = f.password_field :password, class: 'form-control', autocomplete: 'off', placeholder: 'Password'
+                = print_error(user.errors, :email)
+              %div{ class: "col-md-6 form-group #{ error?(user.errors, :password_confirmation) }" }
+                = f.label :password_confirmation, class: 'col-form-label' do
+                  Password Confirmation
+                  %span
+                    %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Password Confirmation' }
+                = f.password_field  :password_confirmation, class: 'form-control', autocomplete: 'off', placeholder: 'Password Confirmation'
+                = print_error(user.errors, :password_confirmation)
+          .row.mt-4
+            .col-12
+              = f.submit "Submit", class: "btn btn-primary btn-block"
