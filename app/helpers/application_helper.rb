@@ -1,4 +1,8 @@
 module ApplicationHelper
+  def can_access?(resource, action)
+    ROLE_PERMISSIONS.dig(current_user.role.to_sym, resource)&.include?(action)
+  end
+
   def menu_active_class(controller, action = nil)
     if action.present?
       'active' if controller == controller_path && action == action_name

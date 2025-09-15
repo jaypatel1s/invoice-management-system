@@ -5,9 +5,10 @@
         %span.page-title-icon.bg-primary.text-white.mr-2
           %i.fa.fa-file
         Products
-    .col-md-5.mt-2.mt-md-0.text-right
-      %a.btn.btn-sm.btn-primary{ href: new_company_product_path, data: { toggle: 'tooltip', placement: 'left '}, title: 'New Product' }
-        %i.fa.fa-plus
+    - if can_access?(:products, :new)
+      .col-md-5.mt-2.mt-md-0.text-right
+        %a.btn.btn-sm.btn-primary{ href: new_company_product_path, data: { toggle: 'tooltip', placement: 'left '}, title: 'New Product' }
+          %i.fa.fa-plus
 
   .row
     .col-12.grid-margin

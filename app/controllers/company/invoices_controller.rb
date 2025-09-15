@@ -18,7 +18,6 @@ class Company
       @invoice.company_id = current_user.company_id
       @invoice.user_id = current_user.id
 
-      debugger
       if @invoice.save
         flash[:success] = 'Invoice was successfully created.'
         redirect_to company_invoices_path

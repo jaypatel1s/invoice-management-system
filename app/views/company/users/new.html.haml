@@ -1,0 +1,15 @@
+
+.content-wrapper
+  .page-header.row
+    .col-md-7
+      %h3.page-title
+        %span.page-title-icon.bg-primary.text-white.mr-2
+          %i.fa.fa-users
+        User
+        %small
+          %i.fa.fa-arrow-right
+          New
+    .col-md-5.mt-2.mt-md-0.text-right
+      %a.btn.btn-sm.btn-success{ href: company_users_path, data: {toggle: 'tooltip', placement: 'left'}, title: 'Users' }
+        %i.fa.fa-reply
+  = render 'form', user: @user

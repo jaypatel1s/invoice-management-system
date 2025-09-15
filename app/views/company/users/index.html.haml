@@ -1,0 +1,42 @@
+.content-wrapper
+  .page-header.row
+    .col-md-7
+      %h3.page-title
+        %span.page-title-icon.bg-primary.text-white.mr-2
+          %i.fa.fa-users
+        Users
+    - if can_access?(:users, :new)
+      .col-md-5.mt-2.mt-md-0.text-right
+        %a.btn.btn-sm.btn-primary{ href: new_company_user_path, data: { toggle: 'tooltip', placement: 'left '}, title: 'New Users' }
+          %i.fa.fa-plus
+
+  .row
+    .col-12.grid-margin
+      .card
+        .card-body
+          - if @users.present?
+            .table-responsive
+              %table.table.table-hover
+                %thead
+                  %tr.table-primary
+                    %th Name
+                    %th Branch Name
+                    %th Email
+                    %th Role
+                    %th.text-right{ width: '10%','data-orderable': 'false' } Actions
+                %tbody
+                  - @users.each do |user|
+                    %tr
+                      %td= user.name
+                      %td= user.branch.name
+                      %td= user.email
+                      %td= user.role
+                      %td.text-right
+                        - if can_access?(:users, :edit)
+                          = link_to raw("<i class='fa fa-pencil-square-o'></i>"), edit_company_user_path( user.id), { class: 'btn-sm btn-warning px-2 py-1', 'data-toggle': 'tooltip', title: 'Edit' }
+                        - if can_access?(:users, :destroy)
+                          = link_to raw("<i class='fa fa-trash-o'></i>"), company_user_path(user.id), { class: 'btn-sm btn-danger px-2 py-1', 'data-toggle': 'tooltip', 'data-confirm': 'Are you sure?', title: 'Delete', method: :delete }
+          - else
+            %center
+              %h6
+                No User Found.

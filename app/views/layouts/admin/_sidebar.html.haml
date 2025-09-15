@@ -7,19 +7,17 @@
         .nav-profile-text.d-flex.flex-column
           %span.font-weight-bold.text-break
             = current_user.email
+    - if can_access?(:dashboard, :index)
       %li.nav-item{ class: menu_active_class('dashboard') }
         %a.nav-link{ href: authenticated_user_path }
           %i.fa.fa-home.menu-icon
           %span.menu-title Dashboard
-      %li.nav-item{ class: menu_active_class('customer') }
-        %a.nav-link{ href: company_customers_path }
-          %i.fa.fa-users.menu-icon
-          %span.menu-title Customers
-      %li.nav-item{ class: menu_active_class('product') }
-        %a.nav-link{ href: company_products_path }
-          %i.fa.fa-users.menu-icon
-          %span.menu-title Products
-      %li.nav-item{ class: menu_active_class('invoice') }
-        %a.nav-link{ href: company_invoices_path }
-          %i.fa.fa-users.menu-icon
-          %span.menu-title Invoices
+
+      - resources = %i[branches users customers products invoices branch_stocks stock_transfer_requests]
+      - resources.each do |resource|
+        - if can_access?(resource, :index)
+          %li.nav-item{ class: menu_active_class(resource.to_s) }
+            %a.nav-link{ href: path_for(resource) }
+              - icons = { branches: 'fa-users', users: 'fa-gear', customers: 'fa-file', products: 'fa-calendar',  invoices: 'fa-graduation-cap', branch_stocks: 'fa-file', stock_transfer_requests: 'fa-graduation-cap' }
+              %i.fa{ class: "fa #{icons[resource]} menu-icon" }
+              %span.menu-title= resource.to_s.titleize

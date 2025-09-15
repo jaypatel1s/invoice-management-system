@@ -6,17 +6,15 @@ class Company
     before_action :set_product, only: %i[edit update destroy show]
 
     def index
-      @products = current_user.company.products
+      @products = current_company.products
     end
 
     def new
-      @product = current_user.company.products.new
+      @product = current_company.products.new
     end
 
     def create
-      @product = current_user.company.products.new(product_params)
-      @product.company_id = current_user.company_id
-
+      @product = current_company.products.new(product_params)
       if @product.save
         flash[:success] = 'Product was successfully created.'
         redirect_to company_products_path
@@ -52,7 +50,7 @@ class Company
     end
 
     def set_product
-      @product = current_user.company.products.find(params[:id])
+      @product = current_company.products.find(id: params[:id])
       return if @product.present?
 
       flash[:alert] = 'Product not found.'

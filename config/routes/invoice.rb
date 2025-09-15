@@ -10,6 +10,15 @@ devise_scope :user do
   end
 end
 namespace :company do
+  resources :branches
+  resources :users
+  resources :branch_stocks
+  resources :stock_transfer_requests do
+    member do
+      put :approve
+      put :reject
+    end
+  end
   resources :customers
   resources :products
   resources :invoices do

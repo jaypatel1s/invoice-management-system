@@ -4,6 +4,9 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,:confirmable, :lockable, :timeoutable, :trackable, timeout_in: 30.minutes
   belongs_to :company
+  belongs_to :branch, optional: true
   has_many :customers, dependent: :destroy
   has_many :invoices, dependent: :destroy
+
+  enum :role, { super_admin: 0, branch: 1, branch_manager: 2, branch_staff: 3 }
 end
