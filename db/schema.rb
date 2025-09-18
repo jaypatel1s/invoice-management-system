@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_18_070805) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_18_104006) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -78,6 +78,25 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_18_070805) do
     t.index ["user_id"], name: "index_invoices_on_user_id"
   end
 
+  create_table "ledgers", force: :cascade do |t|
+    t.bigint "customer_id", null: false
+    t.bigint "supplier_id", null: false
+    t.bigint "invoice_id", null: false
+    t.bigint "purchase_invoice_id", null: false
+    t.bigint "payment_id", null: false
+    t.decimal "debit", precision: 12, scale: 2, default: "0.0"
+    t.decimal "credit", precision: 12, scale: 2, default: "0.0"
+    t.date "entry_date"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_ledgers_on_customer_id"
+    t.index ["invoice_id"], name: "index_ledgers_on_invoice_id"
+    t.index ["payment_id"], name: "index_ledgers_on_payment_id"
+    t.index ["purchase_invoice_id"], name: "index_ledgers_on_purchase_invoice_id"
+    t.index ["supplier_id"], name: "index_ledgers_on_supplier_id"
+  end
+
   create_table "notifications", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "message"
@@ -85,6 +104,24 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_18_070805) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.bigint "invoice_id", null: false
+    t.bigint "purchase_invoice_id", null: false
+    t.bigint "customer_id", null: false
+    t.bigint "supplier_id", null: false
+    t.decimal "amount", precision: 12, scale: 2, null: false
+    t.string "payment_mode"
+    t.string "transaction_ref"
+    t.date "payment_date"
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_payments_on_customer_id"
+    t.index ["invoice_id"], name: "index_payments_on_invoice_id"
+    t.index ["purchase_invoice_id"], name: "index_payments_on_purchase_invoice_id"
+    t.index ["supplier_id"], name: "index_payments_on_supplier_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -215,7 +252,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_18_070805) do
   add_foreign_key "invoices", "companies"
   add_foreign_key "invoices", "customers"
   add_foreign_key "invoices", "users"
+  add_foreign_key "ledgers", "customers"
+  add_foreign_key "ledgers", "invoices"
+  add_foreign_key "ledgers", "payments"
+  add_foreign_key "ledgers", "purchase_invoices"
+  add_foreign_key "ledgers", "suppliers"
   add_foreign_key "notifications", "users"
+  add_foreign_key "payments", "customers"
+  add_foreign_key "payments", "invoices"
+  add_foreign_key "payments", "purchase_invoices"
+  add_foreign_key "payments", "suppliers"
   add_foreign_key "products", "companies"
   add_foreign_key "purchase_invoice_products", "products"
   add_foreign_key "purchase_invoice_products", "purchase_invoices"
