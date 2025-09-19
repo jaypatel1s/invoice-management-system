@@ -2,7 +2,7 @@
 
 # :nodoc:
 class BaseController < ApplicationController
-  layout 'admin'
+  layout 'new_theme'
   before_action :authenticate_user!
   before_action :authorize_action!
   before_action :set_current_branch, unless: -> { current_user&.super_admin? }

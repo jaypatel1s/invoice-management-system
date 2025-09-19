@@ -1,0 +1,17 @@
+%aside.app-sidebar.bg-body-secondary.shadow{"data-bs-theme": "dark"}
+  .sidebar-brand
+    %a.brand-link
+      %img.brand-image.opacity-75.shadow{ alt: "header", src: image_path('common/AdminLTELogo.png') }
+      %span.brand-text.fw-light AdminLTE 4
+
+  .sidebar-wrapper
+    %nav.mt-2
+      %ul#navigation.nav.sidebar-menu.flex-column
+      - resources = %i[branches users customers products invoices branch_stocks stock_transfer_requests]
+      - resources.each do |resource|
+        - if can_access?(resource, :index)
+          %li.nav-item{ class: menu_active_class(resource.to_s) }
+            %a.nav-link{ href: path_for(resource) }
+              - icons = { branches: 'bi-palette', users: 'bi-gear', customers: 'bi-file', products: 'bi-calendar',  invoices: 'bi-graduation-cap', branch_stocks: 'bi-file', stock_transfer_requests: 'bi-graduation-cap' }
+              %i.nav-icon.bi{ class: "bi #{icons[resource]} menu-icon" }
+              %p= resource.to_s.titleize

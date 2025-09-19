@@ -17,11 +17,11 @@
     = csp_meta_tag
 
     = yield :css_top_file
-    = stylesheet_link_tag 'application', 'data-turbolinks-track': 'reload', media: 'all'
+    = stylesheet_link_tag 'new_theme', 'data-turbolinks-track': 'reload', media: 'all'
     = yield :css_file
     = yield :css_code
 
-    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    = javascript_include_tag 'new_theme', 'data-turbolinks-track': 'reload'
     = yield :js_file
     = yield :js_code
 
@@ -32,3 +32,29 @@
 
 
     = render 'common/notification'
+
+- content_for :js_code do
+  :javascript
+    $(document).ready(function () {
+      var SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+      var Default = {
+        scrollbarTheme: 'os-theme-light',
+        scrollbarAutoHide: 'leave',
+        scrollbarClickScroll: true
+      };
+
+      var $sidebarWrapper = $(SELECTOR_SIDEBAR_WRAPPER);
+
+      // Disable OverlayScrollbars on mobile devices to prevent touch interference
+      var isMobile = $(window).width() <= 992;
+
+      if ($sidebarWrapper.length && typeof OverlayScrollbarsGlobal !== 'undefined' && OverlayScrollbarsGlobal.OverlayScrollbars && !isMobile) {
+        OverlayScrollbarsGlobal.OverlayScrollbars($sidebarWrapper[0], {
+          scrollbars: {
+            theme: Default.scrollbarTheme,
+            autoHide: Default.scrollbarAutoHide,
+            clickScroll: Default.scrollbarClickScroll
+          }
+        });
+      }
+    });
