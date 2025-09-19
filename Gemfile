@@ -28,6 +28,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'webauthn'
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary' # This provides the wkhtmltopdf executable
+gem "redis", "~> 5.2"
 
 
 # Background job adapter

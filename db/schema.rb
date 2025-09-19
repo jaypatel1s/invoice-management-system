@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_14_062411) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_18_104006) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,9 +20,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_14_062411) do
     t.integer "quantity", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "stock_id", null: false
     t.index ["branch_id", "product_id"], name: "index_branch_stocks_on_branch_id_and_product_id", unique: true
     t.index ["branch_id"], name: "index_branch_stocks_on_branch_id"
     t.index ["product_id"], name: "index_branch_stocks_on_product_id"
+    t.index ["stock_id"], name: "index_branch_stocks_on_stock_id"
   end
 
   create_table "branches", force: :cascade do |t|
@@ -76,6 +78,52 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_14_062411) do
     t.index ["user_id"], name: "index_invoices_on_user_id"
   end
 
+  create_table "ledgers", force: :cascade do |t|
+    t.bigint "customer_id", null: false
+    t.bigint "supplier_id", null: false
+    t.bigint "invoice_id", null: false
+    t.bigint "purchase_invoice_id", null: false
+    t.bigint "payment_id", null: false
+    t.decimal "debit", precision: 12, scale: 2, default: "0.0"
+    t.decimal "credit", precision: 12, scale: 2, default: "0.0"
+    t.date "entry_date"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_ledgers_on_customer_id"
+    t.index ["invoice_id"], name: "index_ledgers_on_invoice_id"
+    t.index ["payment_id"], name: "index_ledgers_on_payment_id"
+    t.index ["purchase_invoice_id"], name: "index_ledgers_on_purchase_invoice_id"
+    t.index ["supplier_id"], name: "index_ledgers_on_supplier_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "message"
+    t.boolean "read"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.bigint "invoice_id", null: false
+    t.bigint "purchase_invoice_id", null: false
+    t.bigint "customer_id", null: false
+    t.bigint "supplier_id", null: false
+    t.decimal "amount", precision: 12, scale: 2, null: false
+    t.string "payment_mode"
+    t.string "transaction_ref"
+    t.date "payment_date"
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_payments_on_customer_id"
+    t.index ["invoice_id"], name: "index_payments_on_invoice_id"
+    t.index ["purchase_invoice_id"], name: "index_payments_on_purchase_invoice_id"
+    t.index ["supplier_id"], name: "index_payments_on_supplier_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.string "description"
@@ -84,6 +132,29 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_14_062411) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_products_on_company_id"
+  end
+
+  create_table "purchase_invoice_products", force: :cascade do |t|
+    t.bigint "purchase_invoice_id", null: false
+    t.bigint "product_id", null: false
+    t.integer "quantity"
+    t.decimal "unit_price"
+    t.decimal "total_price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_purchase_invoice_products_on_product_id"
+    t.index ["purchase_invoice_id"], name: "index_purchase_invoice_products_on_purchase_invoice_id"
+  end
+
+  create_table "purchase_invoices", force: :cascade do |t|
+    t.bigint "supplier_id", null: false
+    t.string "invoice_number"
+    t.date "invoice_date"
+    t.decimal "total_amount"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["supplier_id"], name: "index_purchase_invoices_on_supplier_id"
   end
 
   create_table "stock_movements", force: :cascade do |t|
@@ -95,9 +166,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_14_062411) do
     t.bigint "reference_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "stock_id", null: false
     t.index ["branch_id"], name: "index_stock_movements_on_branch_id"
     t.index ["product_id"], name: "index_stock_movements_on_product_id"
     t.index ["reference_type", "reference_id"], name: "index_stock_movements_on_reference_type_and_reference_id"
+    t.index ["stock_id"], name: "index_stock_movements_on_stock_id"
   end
 
   create_table "stock_transfer_requests", force: :cascade do |t|
@@ -116,6 +189,26 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_14_062411) do
     t.index ["product_id"], name: "index_stock_transfer_requests_on_product_id"
     t.index ["requested_by_id"], name: "index_stock_transfer_requests_on_requested_by_id"
     t.index ["source_branch_id"], name: "index_stock_transfer_requests_on_source_branch_id"
+  end
+
+  create_table "stocks", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.bigint "product_id", null: false
+    t.integer "quantity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_stocks_on_company_id"
+    t.index ["product_id"], name: "index_stocks_on_product_id"
+  end
+
+  create_table "suppliers", force: :cascade do |t|
+    t.string "name"
+    t.string "gstin"
+    t.string "email"
+    t.string "phone"
+    t.text "address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -152,20 +245,37 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_14_062411) do
 
   add_foreign_key "branch_stocks", "branches"
   add_foreign_key "branch_stocks", "products"
+  add_foreign_key "branch_stocks", "stocks"
   add_foreign_key "branches", "companies"
   add_foreign_key "customers", "companies"
   add_foreign_key "customers", "users"
   add_foreign_key "invoices", "companies"
   add_foreign_key "invoices", "customers"
   add_foreign_key "invoices", "users"
+  add_foreign_key "ledgers", "customers"
+  add_foreign_key "ledgers", "invoices"
+  add_foreign_key "ledgers", "payments"
+  add_foreign_key "ledgers", "purchase_invoices"
+  add_foreign_key "ledgers", "suppliers"
+  add_foreign_key "notifications", "users"
+  add_foreign_key "payments", "customers"
+  add_foreign_key "payments", "invoices"
+  add_foreign_key "payments", "purchase_invoices"
+  add_foreign_key "payments", "suppliers"
   add_foreign_key "products", "companies"
+  add_foreign_key "purchase_invoice_products", "products"
+  add_foreign_key "purchase_invoice_products", "purchase_invoices"
+  add_foreign_key "purchase_invoices", "suppliers"
   add_foreign_key "stock_movements", "branches"
   add_foreign_key "stock_movements", "products"
+  add_foreign_key "stock_movements", "stocks"
   add_foreign_key "stock_transfer_requests", "branches", column: "destination_branch_id"
   add_foreign_key "stock_transfer_requests", "branches", column: "source_branch_id"
   add_foreign_key "stock_transfer_requests", "products"
   add_foreign_key "stock_transfer_requests", "users", column: "approved_by_id"
   add_foreign_key "stock_transfer_requests", "users", column: "requested_by_id"
+  add_foreign_key "stocks", "companies"
+  add_foreign_key "stocks", "products"
   add_foreign_key "users", "branches"
   add_foreign_key "users", "companies"
 end
