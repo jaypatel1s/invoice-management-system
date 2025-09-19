@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   def draw(file)
     instance_eval(Rails.root.join("config/routes/#{file}.rb").read)
   end
+  mount ActionCable.server => "/cable"
 
   # # mount Sidekiq::Web in your Rails app
   # Sidekiq::Web.use Rack::Auth::Basic, 'Protected Area' do |username, password|
