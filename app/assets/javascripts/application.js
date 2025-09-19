@@ -14,3 +14,7 @@
 //= require cocoon
 //= require trix
 //= require custom/misc
+//= require actioncable
+//= require cable
+//= require_tree ./channels
+//= require_tree .
