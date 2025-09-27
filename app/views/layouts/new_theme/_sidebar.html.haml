@@ -1,0 +1,35 @@
+%aside.main-sidebar.sidebar-dark-primary.elevation-4
+  / Brand Logo
+  %a.brand-link{href: "index3.html"}
+    %img.brand-image.img-circle.elevation-3{alt: "AdminLTE Logo", src: image_path('common/AdminLTELogo.png'), style: "opacity: .8"}/
+    %span.brand-text.font-weight-light AdminLTE 3
+  .sidebar
+    .user-panel.mt-3.pb-3.mb-3.d-flex
+      .image
+        %img.img-circle.elevation-2{alt: "User Image", src: "dist/img/user2-160x160.jpg"}/
+      .info
+        %a.d-block{href: "#"} Alexander Pierce
+    / SidebarSearch Form
+    .form-inline
+      .input-group{"data-widget" => "sidebar-search"}
+        %input.form-control.form-control-sidebar{"aria-label" => "Search", placeholder: "Search", type: "search"}/
+        .input-group-append
+          %button.btn.btn-sidebar
+            %i.fas.fa-search.fa-fw
+    %nav.mt-2
+      %ul.nav.nav-pills.nav-sidebar.flex-column{"data-accordion" => "false", "data-widget" => "treeview", role: "menu"}
+        %li.nav-item.menu-open
+
+          %a.nav-link{ href: '#', class: 'company/dashboard' }
+            %i.nav-icon.fas.fa-tachometer-alt
+            %p= 'Dashboard'
+        - resources = %i[branches users customers products invoices branch_stocks stock_transfer_requests]
+        - resources.each do |resource|
+          - if can_access?(resource, :index)
+            %li.nav-item
+              - full_path = "company/#{resource}"
+              %a.nav-link{ href: path_for(resource), class: menu_active_class(full_path) }
+                - icons = { branches: 'fa-palette', users: 'fa-gear', customers: 'fa-file', products: 'fa-calendar',  invoices: 'fa-graduation-cap', branch_stocks: 'fa-file', stock_transfer_requests: 'fa-graduation-cap' }
+                %i.nav-icon.fas{ class: "fa #{icons[resource]}" }
+                %p= resource.to_s.titleize
+

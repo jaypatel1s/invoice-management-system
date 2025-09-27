@@ -25,12 +25,10 @@
     = yield :js_file
     = yield :js_code
 
-  %body.sidebar-fixed
-    .container-scroller
-      = render 'layouts/admin/header'
-      .container-fluid.page-body-wrapper
-        = render 'layouts/admin/sidebar'
-        .main-panel
-          = yield
+  %body.layout-fixed.sidebar-expand-lg.bg-body-tertiary.sidebar-open
+    .app-wrapper
+      = render 'layouts/new_theme/header'
+      = render 'layouts/new_theme/sidebar'
+
 
     = render 'common/notification'
