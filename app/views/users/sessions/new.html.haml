@@ -1,32 +1,41 @@
-.container-scroller
-  .container-fluid.page-body-wrapper.full-page-wrapper
-    .content-wrapper.align-items-stretch.auth.auth-img-bg
-      .row.justify-content-center
-        .col-lg-6.mt-4.align-items-center
-          .auth-form.text-left
-            .brand-logo
-              %a{ href: '/' }
-                = image_tag 'common/logo.png', width: '100px', height: '100px'
-            %h4 Welcome back!
-            %h6.font-weight-light Happy to see you again!
-            .pt-3
-            = form_with model: resource, local: true, url: session_path(resource_name) do |f|
-              %div{ class: "form-group #{error?(resource.errors, :email)}" }
-                = f.label :email
-                = f.email_field :email, autofocus: true, autocomplete: 'email', class: 'form-control', required: true, placeholder: 'Email'
-                = print_error(resource.errors, :email)
-              %div{ class: "form-group #{error?(resource.errors, :password)}" }
-                = f.label :password
-                = f.password_field :password, autocomplete: 'new-password', class: 'form-control', required: true, placeholder: 'Password'
-                = print_error(resource.errors, :password)
-              - if devise_mapping.rememberable?
-                .mb-4
-                  .form-check
-                    %label.form-check-label.text-muted
-                      = f.check_box :remember_me, class: 'form-check-input'
-                      Keep me signed in
-                      %i.input-helper
-              .my-3
-                = f.submit 'LOGIN', class: 'btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn'
-              = render 'devise/shared/links'
-          = render 'devise/shared/footer'
+
+
+.login-box
+  .login-logo
+    %a
+      %b> Admin
+      LTE
+  / /.login-logo
+  .card
+    .card-body.login-card-body
+      %p.login-box-msg Sign in to start your session
+      = form_with model: resource, local: true, url: session_path(resource_name) do |f|
+        %div{ class: "input-group mb-3 #{error?(resource.errors, :email)}" }
+          = f.email_field :email, autofocus: true, autocomplete: 'email', class: 'form-control', required: true, placeholder: 'Email'
+          .input-group-text
+            %span.bi.bi-envelope
+          = print_error(resource.errors, :email)
+        %div{ class:  "input-group mb-3 #{error?(resource.errors, :password)}" }
+          = f.password_field :password, autocomplete: 'new-password', class: 'form-control', required: true, placeholder: 'Password'
+          .input-group-text
+            %span.bi.bi-lock-fill
+          = print_error(resource.errors, :password)
+        .row
+          - if devise_mapping.rememberable?
+            .col-8
+              .form-check
+                = f.check_box :remember_me, class: 'form-check-input'
+                %label.form-check-label{for: "user_remember_me"} Remember Me
+          .col-4
+            .d-grid.gap-2
+              = f.submit 'Sign In', class: 'btn btn-primary'
+      .social-auth-links.text-center.mb-3.d-grid.gap-2
+        %p - OR -
+        %a.btn.btn-primary{href: "#"}
+          %i.bi.bi-facebook.me-2
+          Sign in using Facebook
+        %a.btn.btn-danger{href: "#"}
+          %i.bi.bi-google.me-2
+          Sign in using Google+
+      %p.mb-1
+        = link_to 'Forget Your Password', new_password_path(resource_name)

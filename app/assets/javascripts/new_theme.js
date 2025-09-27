@@ -1,6 +1,5 @@
 //= require jquery/jquery.min
 //= require jquery_ujs
-//= require turbolinks
 //= require jquery-ui/jquery-ui.min
 //= require popper/popper.min.js
 //= require bootstrap/bootstrap.min
@@ -14,3 +13,6 @@
 //= require cocoon
 //= require trix
 //= require new_theme/adminlte
+//= require actioncable
+//= require cable
+//= require_tree ./channels
