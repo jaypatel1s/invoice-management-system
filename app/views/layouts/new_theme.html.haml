@@ -12,7 +12,7 @@
     %link{href: image_url('logo_152.png'), rel: 'apple-touch-icon', sizes: '152x152'}
     %link{href: image_url('logo_167.png'), rel: 'apple-touch-icon', sizes: '167x167'}
     %link{href: image_url('logo_180.png'), rel: 'apple-touch-icon', sizes: '180x180'}
-
+    %link{href: "https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback", rel: "stylesheet"}
     = csrf_meta_tags
     = csp_meta_tag
 
@@ -25,36 +25,9 @@
     = yield :js_file
     = yield :js_code
 
-  %body.layout-fixed.sidebar-expand-lg.bg-body-tertiary.sidebar-open
-    .app-wrapper
+  %body.sidebar-mini.layout-fixed
+    .wrapper
       = render 'layouts/new_theme/header'
       = render 'layouts/new_theme/sidebar'
-
-
+      = yield
     = render 'common/notification'
-
-- content_for :js_code do
-  :javascript
-    $(document).ready(function () {
-      var SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-      var Default = {
-        scrollbarTheme: 'os-theme-light',
-        scrollbarAutoHide: 'leave',
-        scrollbarClickScroll: true
-      };
-
-      var $sidebarWrapper = $(SELECTOR_SIDEBAR_WRAPPER);
-
-      // Disable OverlayScrollbars on mobile devices to prevent touch interference
-      var isMobile = $(window).width() <= 992;
-
-      if ($sidebarWrapper.length && typeof OverlayScrollbarsGlobal !== 'undefined' && OverlayScrollbarsGlobal.OverlayScrollbars && !isMobile) {
-        OverlayScrollbarsGlobal.OverlayScrollbars($sidebarWrapper[0], {
-          scrollbars: {
-            theme: Default.scrollbarTheme,
-            autoHide: Default.scrollbarAutoHide,
-            clickScroll: Default.scrollbarClickScroll
-          }
-        });
-      }
-    });
