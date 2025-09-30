@@ -5,7 +5,7 @@
  *= require bootstrap/datetimepicker.min
  *= require daterangepicker/daterangepicker
  *= require jquery-ui/jquery-ui
- *= require notify/notify
+ *= require new_theme/toastr.min
  *= require jquery-tags/jquery-tags
  *= require trix
  *= require new_theme/adminlte

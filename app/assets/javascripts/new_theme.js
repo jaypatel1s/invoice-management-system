@@ -8,7 +8,7 @@
 //= require bootstrap/datetimepicker.min
 //= require daterangepicker/daterangepicker.min
 //= require daterangepicker/custom
-//= require notify/notify
+//= require new_theme/toastr.min
 //= require jquery-tags/jquery-tags
 //= require cocoon
 //= require trix
