@@ -4,7 +4,8 @@ ROLE_PERMISSIONS = {
     company: %i[index new create edit update show destroy],
     branches: %i[index new create edit update show destroy],
     users: %i[index new create edit update show destroy],
-    customers: %i[index show]
+    customers: %i[index show],
+    products: %i[index new create edit update show destroy]
   },
   branch: {
     dashboard: %i[index],

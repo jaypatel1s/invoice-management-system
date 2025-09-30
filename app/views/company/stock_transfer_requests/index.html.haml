@@ -1,53 +1,63 @@
-.content-wrapper
-  .page-header.row
-    .col-md-7
-      %h3.page-title
-        %span.page-title-icon.bg-primary.text-white.mr-2
-          %i.fa.fa-file
-        Stock Transfer Requests
-    - if can_access?(:stock_transfer_requests, :new)
-      .col-md-5.mt-2.mt-md-0.text-right
-        %a.btn.btn-sm.btn-primary{ href: new_company_stock_transfer_request_path, data: { toggle: 'tooltip',
-        placement: 'left '}, title: 'New Branch Stock' }
-          %i.fa.fa-plus
+.content-wrapper{style: "min-height: 1604.44px;"}
+  %section.content-header
+    .container-fluid
+      .row.mb-2
+        .col-sm-6
+          %h1 Stock Transfer Requests
+        - if can_access?(:stock_transfer_requests, :new)
+          .col-sm-6.d-flex.justify-content-end.align-items-center
+            %a.btn.btn-sm.btn-primary{ href: new_company_stock_transfer_request_path, data: { toggle: 'tooltip', placement: 'left '}, title: 'New Branch Stock Transfer Request' }
+              %i.fa.fa-plus
+              Create
+  %section.content
+    .card
+      .card-body
+        - if @stock_transfer_requests.present?
+          %table.table.table-striped.projects
+            %thead
+              %tr
+                %th Product
+                %th Source Branch
+                %th Destination Branch
+                %th Quantity
+                %th Requested By
+                %th Approved By
+                %th Status
+                %th Notes
+                - if can_access?(:stock_transfer_requests, :edit) || can_access?(:stock_transfer_requests, :destroy)
+                  %th.text-right{ width: '20%' } Actions
+            %tbody
+              - @stock_transfer_requests.each do |stock_transfer_request|
+                %tr
+                  %td= stock_transfer_request.product.name
+                  %td= stock_transfer_request.source_branch.name
+                  %td= stock_transfer_request.destination_branch.name
+                  %td= stock_transfer_request.quantity
+                  %td= stock_transfer_request.requested_by.name
+                  %td= stock_transfer_request.approved_by&.name
+                  %td= stock_transfer_request.status.capitalize
+                  %td= stock_transfer_request.notes
+                  - if can_access?(:stock_transfer_requests, :edit) || can_access?(:stock_transfer_requests, :destroy)
+                    %td.project-actions.text-right
+                      - if stock_transfer_request.pending? && stock_transfer_request.source_branch == current_user.branch
+                        = link_to approve_company_stock_transfer_request_path(stock_transfer_request.id), method: :put,class: 'btn btn-primary btn-sm mx-1', title: 'Approve' do
+                          %i.fas.fa-check
+                          Approve
+                        = link_to reject_company_stock_transfer_request_path(stock_transfer_request.id), method: :put, class: 'btn btn-warning btn-sm mx-1', title: 'Reject' do
+                          %i.fas.fa-ban
+                          Reject
+                      - else
+                        - if can_access?(:stock_transfer_requests, :edit)
+                          = link_to edit_company_stock_transfer_request_path(stock_transfer_request.id), class: 'btn btn-info btn-sm mx-1', title: 'Edit' do
+                            %i.fas.fa-pencil-alt
+                            Edit
+                        - if can_access?(:stock_transfer_requests, :destroy)
+                          = link_to company_stock_transfer_request_path(stock_transfer_request.id),  method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger',
+                            title: 'Delete' do
+                            %i.fas.fa-trash
+                            Delete
+        - else
+          %center
+            %h6
+              No Stock Transfer Requests Found.
 
-  .row
-    .col-12.grid-margin
-      .card
-        .card-body
-          - if @stock_transfer_requests.present?
-            .table-responsive
-              %table.table.table-hover
-                %thead
-                  %tr.table-primary
-                    %th Product
-                    %th Source Branch
-                    %th Destination Branch
-                    %th Quantity
-                    %th Requested By
-                    %th Approved By
-                    %th Status
-                    %th Notes
-                    %th.text-right{ width: '10%','data-orderable': 'false' } Actions
-                %tbody
-                  - @stock_transfer_requests.each do |stock_transfer_request|
-                    %tr
-                      %td= stock_transfer_request.product.name
-                      %td= stock_transfer_request.source_branch.name
-                      %td= stock_transfer_request.destination_branch.name
-                      %td= stock_transfer_request.quantity
-                      %td= stock_transfer_request.requested_by.name
-                      %td= stock_transfer_request.approved_by&.name
-                      %td= stock_transfer_request.status.capitalize
-                      %td= stock_transfer_request.notes
-                      %td.text-right
-                        - if stock_transfer_request.pending? && stock_transfer_request.source_branch == current_user.branch
-                          = link_to raw("<i class='fa fa-check'></i>"), approve_company_stock_transfer_request_path(stock_transfer_request.id), { class: 'btn-sm btn-warning px-2 py-1', 'data-toggle': 'tooltip', title: 'Approve', method: :put }
-                          = link_to raw("<i class='fa fa-block'></i>"), reject_company_stock_transfer_request_path(stock_transfer_request.id), { class: 'btn-sm btn-warning px-2 py-1', 'data-toggle': 'tooltip', title: 'Reject',method: :put }
-                        = link_to raw("<i class='fa fa-pencil-square-o'></i>"), edit_company_stock_transfer_request_path(stock_transfer_request.id), { class: 'btn-sm btn-warning px-2 py-1', 'data-toggle': 'tooltip', title: 'Edit' }
-                        = link_to raw("<i class='fa fa-trash-o'></i>"), company_stock_transfer_request_path(stock_transfer_request.id),
-                        { class: 'btn-sm btn-danger px-2 py-1', 'data-toggle': 'tooltip', 'data-confirm': 'Are you sure?', title: 'Delete', method: :delete }
-          - else
-            %center
-              %h6
-                No Stock Transfer Requests Found.

@@ -1,40 +1,44 @@
-.content-wrapper
-  .page-header.row
-    .col-md-7
-      %h3.page-title
-        %span.page-title-icon.bg-primary.text-white.mr-2
-          %i.fa.fa-file
-        Branch Stocks
-    - if can_access?(:branch_stocks, :new)
-      .col-md-5.mt-2.mt-md-0.text-right
-        %a.btn.btn-sm.btn-primary{ href: new_company_branch_stock_path, data: { toggle: 'tooltip',
-        placement: 'left '}, title: 'New Branch Stock' }
-          %i.fa.fa-plus
-
-  .row
-    .col-12.grid-margin
-      .card
-        .card-body
-          - if @branch_stocks.present?
-            .table-responsive
-              %table.table.table-hover
-                %thead
-                  %tr.table-primary
-                    %th Branch
-                    %th Product
-                    %th Quantity
-                    %th.text-right{ width: '10%','data-orderable': 'false' } Actions
-                %tbody
-                  - @branch_stocks.each do |branch_stock|
-                    %tr
-                      %td= branch_stock.branch.name
-                      %td= branch_stock.product.name
-                      %td= branch_stock.quantity
-                      %td.text-right
-                        = link_to raw("<i class='fa fa-pencil-square-o'></i>"), edit_company_branch_stock_path(branch_stock.id), { class: 'btn-sm btn-warning px-2 py-1', 'data-toggle': 'tooltip', title: 'Edit' }
-                        = link_to raw("<i class='fa fa-trash-o'></i>"), company_branch_stock_path(branch_stock.id),
-                        { class: 'btn-sm btn-danger px-2 py-1', 'data-toggle': 'tooltip', 'data-confirm': 'Are you sure?', title: 'Delete', method: :delete }
-          - else
-            %center
-              %h6
-                No Branch Stock Found.
+.content-wrapper{style: "min-height: 1604.44px;"}
+  %section.content-header
+    .container-fluid
+      .row.mb-2
+        .col-sm-6
+          %h1 Branch Stocks
+        - if can_access?(:branch_stocks, :new)
+          .col-sm-6.d-flex.justify-content-end.align-items-center
+            %a.btn.btn-sm.btn-primary{ href: new_company_branch_stock_path, data: { toggle: 'tooltip', placement: 'left '}, title: 'New Branch Stock' }
+              %i.fa.fa-plus
+              Create
+  %section.content
+    .card
+      .card-body
+        - if @branch_stocks.present?
+          %table.table.table-striped.projects
+            %thead
+              %tr
+                %th Branch
+                %th Product
+                %th Quantity
+                - if can_access?(:branch_stocks, :destroy)
+                  %th.text-right{ width: '20%' } Actions
+            %tbody
+              - @branch_stocks.each do |branch_stock|
+                %tr
+                  %td= branch_stock.branch.name
+                  %td= branch_stock.product.name
+                  %td= branch_stock.quantity
+                  - if can_access?(:branch_stocks, :edit) || can_access?(:branch_stocks, :destroy)
+                    %td.project-actions.text-right
+                      - if can_access?(:branch_stocks, :edit)
+                        = link_to edit_company_branch_stock_path(branch_stock.id), class: 'btn btn-info btn-sm mx-1', title: 'Edit' do
+                          %i.fas.fa-pencil-alt
+                          Edit
+                      - if can_access?(:branch_stocks, :destroy)
+                        = link_to company_branch_stock_path(branch_stock.id),  method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger',
+                          title: 'Delete' do
+                          %i.fas.fa-trash
+                          Delete
+        - else
+          %center
+            %h6
+              No Branch Stock Found.

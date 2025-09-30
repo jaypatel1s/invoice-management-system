@@ -1,42 +1,36 @@
-.row
-  .col-md-12.grid-margin.stretch-card
-    .card
-      .card-body
-        = form_with model: stock_transfer_request, url: company_stock_transfer_requests_path, local: true, html: { multipart: true }, class: 'form' do |f|
-          .row
-            %div{ class: "col-md-6 form-group #{ error?(stock_transfer_request.errors, :product_id) }" }
-              = f.label :product_id, class: 'col-form-label' do
-                Product
-                %span
-                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Select Product from your branch stock' }
-              = f.collection_select :product_id, current_user.branch.branch_stocks.includes(:product).map(&:product), :id, :name, { prompt: 'Select Product' }, class: 'form-control select2-field'
-              = print_error(stock_transfer_request.errors, :product_id)
+%section.content
+  .container-fluid
+    .row
+      .col-md-12
+        .card.card-primary
+          .card-header
+            %h3.card-title Basic Details
+          = form_with model: [:company, stock_transfer_request], local: true, html: { multipart: true }, class: 'form' do |f|
+            .card-body
+              .row
+                %div{ class: "col-md-4 form-group #{ error?(stock_transfer_request.errors, :product_id) }" }
+                  = f.label :product_id, class: 'col-form-label' do
+                    Product
+                  = f.collection_select :product_id, current_user.branch.branch_stocks.includes(:product).map(&:product), :id, :name, { prompt: 'Select Product' }, class: 'form-control select2-field'
+                  = print_error(stock_transfer_request.errors, :product_id)
 
-            %div{ class: "col-md-6 form-group #{ error?(stock_transfer_request.errors, :destination_branch_id) }" }
-              = f.label :destination_branch_id, class: 'col-form-label' do
-                Source Branch
-                %span
-                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Select the branch to transfer stock from' }
-              = f.collection_select :source_branch_id, current_user.branch.company.branches.where.not(id: current_user.branch_id), :id, :name, { prompt: 'Select Branch' }, class: 'form-control select2-field'
-              = print_error(stock_transfer_request.errors, :source_branch_id)
-
-          .row
-            %div{ class: "col-md-6 form-group #{ error?(stock_transfer_request.errors, :quantity) }" }
-              = f.label :quantity, class: 'col-form-label', min: 1  do
-                Quantity
-                %span
-                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Enter quantity to transfer' }
-              = f.number_field :quantity, min: 1, class: 'form-control', placeholder: 'Quantity'
-              = print_error(stock_transfer_request.errors, :quantity)
-
-            %div{ class: "col-md-6 form-group #{ error?(stock_transfer_request.errors, :notes) }" }
-              = f.label :notes, class: 'col-form-label' do
-                Notes
-                %span
-                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Optional notes for the transfer request' }
-              = f.text_area :notes, rows: 3, class: 'form-control', placeholder: 'Notes'
-              = print_error(stock_transfer_request.errors, :notes)
-
-          .row.mt-4
-            .col-12
-              = f.submit "Create Transfer Request", class: "btn btn-primary btn-block"
+                %div{ class: "col-md-4 form-group #{ error?(stock_transfer_request.errors, :destination_branch_id) }" }
+                  = f.label :destination_branch_id, class: 'col-form-label' do
+                    Source Branch
+                  = f.collection_select :source_branch_id, current_user.branch.company.branches.where.not(id: current_user.branch_id), :id, :name, { prompt: 'Select Branch' }, class: 'form-control select2-field'
+                  = print_error(stock_transfer_request.errors, :source_branch_id)
+                %div{ class: "col-md-4 form-group #{ error?(stock_transfer_request.errors, :quantity) }" }
+                  = f.label :quantity, class: 'col-form-label', min: 1  do
+                    Quantity
+                  = f.number_field :quantity, min: 1, class: 'form-control', placeholder: 'Quantity'
+                  = print_error(stock_transfer_request.errors, :quantity)
+              .row
+                %div{ class: "col-md-12 form-group #{ error?(stock_transfer_request.errors, :notes) }" }
+                  = f.label :notes, class: 'col-form-label' do
+                    Notes
+                  = f.text_area :notes, rows: 3, class: 'form-control', placeholder: 'Notes'
+                  = print_error(stock_transfer_request.errors, :notes)
+              .row
+                .col-12.mb-2
+                  %a.btn.btn-secondary{href: company_stock_transfer_requests_path} Cancel
+                  = f.submit "Submit", class: "btn btn-primary float-right"

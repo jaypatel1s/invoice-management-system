@@ -1,39 +1,36 @@
-.row
-  .col-md-12.grid-margin.stretch-card
-    .card
-      .card-body
-        = form_with model: [:company, customer], local: true, html: { multipart: true }, class: 'form' do |f|
-          .row
-            %div{ class: "col-md-6 form-group #{ error?(customer.errors, :name) }" }
-              = f.label :name, class: 'col-form-label' do
-                Name
-                %span
-                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Name' }
-              = f.text_field :name, class: 'form-control', autocomplete: 'off', placeholder: 'Customer name'
-              = print_error(customer.errors, :name)
-            %div{ class: "col-md-6 form-group #{ error?(customer.errors, :email) }" }
-              = f.label :email, class: 'col-form-label' do
-                Email
-                %span
-                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Email' }
-              = f.email_field :email, class: 'form-control', autocomplete: 'off', placeholder: 'Email'
-              = print_error(customer.errors, :email)
-          .row
-            %div{ class: "col-md-6 form-group #{ error?(customer.errors, :phone) }" }
-              = f.label :phone, class: 'col-form-label' do
-                Phone
-                %span
-                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Phone Number' }
-              = f.text_field :phone, class: 'form-control', autocomplete: 'off', placeholder: 'Phone Number'
-              = print_error(customer.errors, :phone)
-            %div{ class: "col-md-6 form-group #{ error?(customer.errors, :address) }" }
-              = f.label :address, class: 'col-form-label' do
-                Address
-                %span
-                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Address' }
-              = f.text_field :address, class: 'form-control', autocomplete: 'off', placeholder: 'Address'
-              = print_error(customer.errors, :address)
+%section.content
+  .container-fluid
+    .row
+      .col-md-12
+        .card.card-primary
+          .card-header
+            %h3.card-title Basic Details
+          = form_with model: [:company, customer], local: true, html: { multipart: true }, class: 'form' do |f|
+            .card-body
+              .row
+                %div{ class: "col-md-6 form-group #{ error?(customer.errors, :name) }" }
+                  = f.label :name, class: 'col-form-label' do
+                    Name
+                  = f.text_field :name, class: 'form-control', autocomplete: 'off', placeholder: 'Customer name'
+                  = print_error(customer.errors, :name)
+                %div{ class: "col-md-6 form-group #{ error?(customer.errors, :email) }" }
+                  = f.label :email, class: 'col-form-label' do
+                    Email
+                  = f.email_field :email, class: 'form-control', autocomplete: 'off', placeholder: 'Email'
+                  = print_error(customer.errors, :email)
+              .row
+                %div{ class: "col-md-6 form-group #{ error?(customer.errors, :phone) }" }
+                  = f.label :phone, class: 'col-form-label' do
+                    Phone
+                  = f.text_field :phone, class: 'form-control', autocomplete: 'off', placeholder: 'Phone Number'
+                  = print_error(customer.errors, :phone)
+                %div{ class: "col-md-6 form-group #{ error?(customer.errors, :address) }" }
+                  = f.label :address, class: 'col-form-label' do
+                    Address
+                  = f.text_field :address, class: 'form-control', autocomplete: 'off', placeholder: 'Address'
+                  = print_error(customer.errors, :address)
 
-          .row.mt-4
-            .col-12
-              = f.submit "Submit", class: "btn btn-primary btn-block"
+              .row
+                .col-12.mb-2
+                  %a.btn.btn-secondary{href: company_customers_path} Cancel
+                  = f.submit "Submit", class: "btn btn-primary float-right"

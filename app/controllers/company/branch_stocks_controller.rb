@@ -15,6 +15,7 @@ class Company
 
     def create
       @branch_stock = current_user.branch.branch_stocks.new(branch_stock_params)
+      @branch_stock.stock_id = fetch_current_stock(branch_stock_params)
       if @branch_stock.save
         flash[:success] = 'Branch Stock was successfully created.'
         redirect_to company_branch_stocks_path
@@ -50,11 +51,15 @@ class Company
     end
 
     def set_branch_stock
-      @branch_stock = current_user.branch.branch_stocks.find(id: params[:id])
+      @branch_stock = current_user.branch.branch_stocks.find_by(id: params[:id])
       return if @branch_stock.present?
 
-      flash[:alert] = 'branch_stock not found.'
+      flash[:alert] = 'Branch Stock not found.'
       redirect_to company_branch_stocks_path
+    end
+
+    def fetch_current_stock(params)
+      current_company.stocks.find_by(product_id: params[:product_id])&.id
     end
   end
 end

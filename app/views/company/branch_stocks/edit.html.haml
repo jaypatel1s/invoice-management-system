@@ -3,10 +3,10 @@
     .container-fluid
       .row.mb-2
         .col-sm-6
-          %h1 Branch Stock / New
+          %h1 Branch Stock / Edit
         .col-sm-6
           %ol.breadcrumb.float-sm-right
-            %a.btn.btn-sm.btn-primary{ href: company_branch_stocks_path, data: { toggle: 'tooltip', placement: 'left '}, title: 'Branch Stocks' }
+            %a.btn.btn-sm.btn-primary{ href: company_branch_stocks_path, data: { toggle: 'tooltip', placement: 'left '}, title: 'Branch Stock' }
               %i.fa.fa-reply
 
   = render 'form', branch_stock: @branch_stock

@@ -3,10 +3,11 @@
     .container-fluid
       .row.mb-2
         .col-sm-6
-          %h1 Stock Transfer Request / New
+          %h1 Stock Transfer Request / Edit
         .col-sm-6
           %ol.breadcrumb.float-sm-right
             %a.btn.btn-sm.btn-primary{ href: company_stock_transfer_requests_path, data: { toggle: 'tooltip', placement: 'left '}, title: 'Stock Transfer Requests' }
               %i.fa.fa-reply
 
   = render 'form', stock_transfer_request: @stock_transfer_request
+
