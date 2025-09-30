@@ -1,0 +1,24 @@
+%section.content
+  .container-fluid
+    .row
+      .col-md-12
+        .card.card-primary
+          .card-header
+            %h3.card-title Basic Details
+          = form_with model: [:company, stock], local: true, html: { multipart: true }, class: 'form' do |f|
+            .card-body
+              .row
+                %div{ class: "col-md-6 form-group #{ error?(stock.errors, :product_id) }" }
+                  = f.label :product_id, class: 'col-form-label' do
+                    Product
+                  = f.collection_select :product_id, current_company.products, :id, :name, { prompt: 'Select Product' }, class: 'form-control select2-field'
+                  = print_error(stock.errors, :product_id)
+                %div{ class: "col-md-6 form-group #{ error?(stock.errors, :quantity) }" }
+                  = f.label :quantity, class: 'col-form-label', min: 1  do
+                    Quantity
+                  = f.number_field :quantity, min: 1, class: 'form-control', placeholder: 'Quantity'
+                  = print_error(stock.errors, :quantity)
+              .row
+                .col-12.mb-2
+                  %a.btn.btn-secondary{href: company_stocks_path} Cancel
+                  = f.submit "Submit", class: "btn btn-primary float-right"

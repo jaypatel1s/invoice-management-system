@@ -5,6 +5,7 @@ ROLE_PERMISSIONS = {
     branches: %i[index new create edit update show destroy],
     users: %i[index new create edit update show destroy],
     customers: %i[index show],
+    stocks: %i[index new create edit update show destroy],
     products: %i[index new create edit update show destroy]
   },
   branch: {

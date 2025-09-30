@@ -1,0 +1,42 @@
+.content-wrapper{style: "min-height: 1604.44px;"}
+  %section.content-header
+    .container-fluid
+      .row.mb-2
+        .col-sm-6
+          %h1 Stocks
+        - if can_access?(:stocks, :new)
+          .col-sm-6.d-flex.justify-content-end.align-items-center
+            %a.btn.btn-sm.btn-primary{ href: new_company_stock_path, data: { toggle: 'tooltip', placement: 'left '}, title: 'New stock' }
+              %i.fa.fa-plus
+              Create
+  %section.content
+    .card
+      .card-body
+        - if @stocks.present?
+          %table.table.table-striped.projects
+            %thead
+              %tr
+                %th Product Name
+                %th Quantity
+                - if can_access?(:stocks, :edit) || can_access?(:stocks, :destroy)
+                  %th.text-right{ width: '20%' } Actions
+            %tbody
+              - @stocks.each do |stock|
+                %tr
+                  %td= stock.product.name
+                  %td= stock.quantity
+                  - if can_access?(:stocks, :edit) || can_access?(:stocks, :destroy)
+                    %td.project-actions.text-right
+                      - if can_access?(:stocks, :edit)
+                        = link_to edit_company_stock_path(stock.id), class: 'btn btn-info btn-sm mx-1', title: 'Edit' do
+                          %i.fas.fa-pencil-alt
+                          Edit
+                      - if can_access?(:stocks, :destroy)
+                        = link_to company_stock_path(stock.id),  method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger',
+                          title: 'Delete' do
+                          %i.fas.fa-trash
+                          Delete
+        - else
+          %center
+            %h6
+              No Stock Found.

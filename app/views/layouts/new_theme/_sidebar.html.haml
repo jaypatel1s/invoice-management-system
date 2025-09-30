@@ -23,13 +23,13 @@
           %a.nav-link{ href: '#', class: 'company/dashboard' }
             %i.nav-icon.fas.fa-tachometer-alt
             %p= 'Dashboard'
-        - resources = %i[branches users customers products invoices branch_stocks stock_transfer_requests]
+        - resources = %i[branches users customers products invoices stocks branch_stocks stock_transfer_requests]
         - resources.each do |resource|
           - if can_access?(resource, :index)
             %li.nav-item
               - full_path = "company/#{resource}"
               %a.nav-link{ href: path_for(resource), class: menu_active_class(full_path) }
-                - icons = { branches: 'fa-palette', users: 'fa-gear', customers: 'fa-file', products: 'fa-calendar',  invoices: 'fa-graduation-cap', branch_stocks: 'fa-file', stock_transfer_requests: 'fa-graduation-cap' }
+                - icons = { branches: 'fa-palette', users: 'fa-gear', customers: 'fa-file', products: 'fa-calendar', invoices: 'fa-graduation-cap', stocks: 'fa-landmark', branch_stocks: 'fa-file', stock_transfer_requests: 'fa-graduation-cap' }
                 %i.nav-icon.fas{ class: "fa #{icons[resource]}" }
                 %p= resource.to_s.titleize
 

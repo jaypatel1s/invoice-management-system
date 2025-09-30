@@ -12,6 +12,7 @@ end
 namespace :company do
   resources :branches
   resources :users
+  resources :stocks
   resources :branch_stocks
   resources :stock_transfer_requests do
     member do
