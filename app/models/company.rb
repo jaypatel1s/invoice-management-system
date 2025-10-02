@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# :nodoc:
 class Company < ApplicationRecord
   has_many :users, dependent: :destroy
   has_many :customers, dependent: :destroy

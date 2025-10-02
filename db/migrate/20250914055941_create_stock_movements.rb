@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# :nodoc:
 class CreateStockMovements < ActiveRecord::Migration[7.1]
   def change
     create_table :stock_movements do |t|
@@ -11,6 +14,6 @@ class CreateStockMovements < ActiveRecord::Migration[7.1]
       t.timestamps
     end
 
-    add_index :stock_movements, [:reference_type, :reference_id]
+    add_index :stock_movements, %i[reference_type reference_id]
   end
 end

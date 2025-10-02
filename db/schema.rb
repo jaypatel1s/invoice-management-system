@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 20_250_918_104_006) do
+ActiveRecord::Schema[7.1].define(version: 20_251_001_162_148) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'plpgsql'
 
@@ -158,7 +158,7 @@ ActiveRecord::Schema[7.1].define(version: 20_250_918_104_006) do
   end
 
   create_table 'stock_movements', force: :cascade do |t|
-    t.bigint 'branch_id', null: false
+    t.bigint 'branch_id'
     t.bigint 'product_id', null: false
     t.integer 'quantity', null: false
     t.integer 'movement_type', default: 0, null: false

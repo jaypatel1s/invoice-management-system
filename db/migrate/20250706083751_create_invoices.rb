@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# :nodoc:
 class CreateInvoices < ActiveRecord::Migration[7.1]
   def change
     create_table :invoices do |t|

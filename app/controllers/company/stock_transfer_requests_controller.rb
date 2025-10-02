@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class Company
+  # :nodoc:
   class StockTransferRequestsController < BaseController
-    before_action :set_request, only: %i[show edit approve reject destroy]
+    before_action :set_request, only: %i[show edit update approve reject destroy]
 
     def index
       @stock_transfer_requests = StockTransferRequest.where(
@@ -16,34 +17,55 @@ class Company
     end
 
     def create
-      @stock_transfer_request = Company::StockTransferService.create_transfer(stock_transfer_params, current_user)
-      flash[:success] = 'Stock transfer request created successfully.'
-      redirect_to company_stock_transfer_requests_path
-    rescue StandardError => e
-      flash[:alert] = "Failed to create transfer request: #{e.message}"
-      render :new
+      response = StockTransferService.new('requesting', params: stock_transfer_params, user: current_user,
+                                                        object: @stock_transfer_request).call
+
+      if response[:success]
+        flash[:success] = 'Stock transfer request created successfully.'
+        redirect_to company_stock_transfer_requests_path
+      else
+        flash[:alert] = response[:errors].join(', ')
+        render :new
+      end
     end
 
     def show; end
 
     def edit; end
 
+    def update
+      response = StockTransferService.new('updating', params: stock_transfer_params, user: current_user,
+                                                      object: @stock_transfer_request).call
+
+      if response[:success]
+        flash[:success] = 'Stock transfer request updated successfully.'
+        redirect_to company_stock_transfer_requests_path
+      else
+        flash[:alert] = response[:errors].join(', ')
+        render :new
+      end
+    end
+
     def approve
-      StockTransferService.approve_transfer(@stock_transfer_request, current_user)
-      flash[:success] = 'Transfer approved and stock updated.'
-      redirect_to company_stock_transfer_requests_path
-    rescue StandardError => e
-      flash[:alert] = "Approval failed: #{e.message}"
+      response = StockTransferService.new('approving', user: current_user,
+                                                       object: @stock_transfer_request).call
+
+      if response[:success]
+        flash[:success] = 'Transfer approved and stock updated.'
+      else
+        flash[:alert] = "Approval failed: #{response[:errors].join(', ')}"
+      end
       redirect_to company_stock_transfer_requests_path
     end
 
-    # POST /company/stock_transfer_requests/:id/reject
     def reject
-      StockTransferService.reject_transfer(@stock_transfer_request, current_user)
-      flash[:notice] = 'Transfer rejected.'
-      redirect_to company_stock_transfer_requests_path
-    rescue StandardError => e
-      flash[:alert] = "Reject failed: #{e.message}"
+      response = StockTransferService.new('rejecting', user: current_user,
+                                                       object: @stock_transfer_request).call
+      if response[:success]
+        flash[:notice] = 'Transfer rejected.'
+      else
+        flash[:alert] = "Reject failed: #{e.message}"
+      end
       redirect_to company_stock_transfer_requests_path
     end
 

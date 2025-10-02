@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Company
+  # :nodoc:
   class StocksController < BaseController
     before_action :set_stock, only: %i[edit update destroy show]
 
@@ -14,7 +15,11 @@ class Company
 
     def create
       @stock = current_company.stocks.new(stock_params)
+
       if @stock.save
+        StockMovementService.new(@stock, product: @stock.product, quantity: @stock.quantity,
+                                         reference: @stock).call
+
         flash[:success] = 'Stock was successfully created.'
         redirect_to company_stocks_path
       else
@@ -22,10 +27,16 @@ class Company
       end
     end
 
-    def edit; end
-
     def update
+      old_qty = @stock.quantity
+
       if @stock.update(stock_params)
+        difference = @stock.quantity - old_qty
+        if difference != 0
+          StockMovementService.new(@stock, product: @stock.product,
+                                           quantity: difference, reference: @stock).call
+        end
+
         flash[:success] = 'Stock was successfully updated.'
         redirect_to company_stocks_path
       else

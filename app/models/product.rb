@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# :nodoc:
 class Product < ApplicationRecord
   belongs_to :company
   has_many :stocks, dependent: :destroy

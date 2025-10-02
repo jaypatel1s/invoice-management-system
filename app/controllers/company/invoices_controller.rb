@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Company
+  # :nodoc:
   class InvoicesController < BaseController
     before_action :set_invoice, only: %i[edit update destroy show]
     before_action :set_customers, only: %i[new create edit]
@@ -52,8 +53,8 @@ class Company
         format.pdf do
           render pdf: "invoice#{@invoice.id}", # filename
                  template: 'invoices/download_pdf', # view template
-                 layout: 'application',                # layout for PDF
-                 disposition: 'attachment'          # or 'inline'
+                 layout: 'application', # layout for PDF
+                 disposition: 'attachment' # or 'inline'
         end
       end
     end

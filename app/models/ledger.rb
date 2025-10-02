@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# :nodoc:
 class Ledger < ApplicationRecord
   belongs_to :customer, optional: true
   belongs_to :supplier, optional: true
