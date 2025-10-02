@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# :nodoc:
 class Invoice < ApplicationRecord
   belongs_to :company
   belongs_to :customer

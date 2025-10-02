@@ -50,7 +50,7 @@ class Company
     end
 
     def set_product
-      @product = current_company.products.find(id: params[:id])
+      @product = current_company.products.find_by(id: params[:id])
       return if @product.present?
 
       flash[:alert] = 'Product not found.'

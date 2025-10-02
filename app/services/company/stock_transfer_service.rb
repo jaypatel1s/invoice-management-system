@@ -1,61 +1,93 @@
 # frozen_string_literal: true
 
 class Company
+  # :nodoc:
   class StockTransferService
-    # Create a new transfer request
-    def self.create_transfer(params, user)
+    attr_accessor :params, :user, :request, :object, :errors
+
+    def initialize(request, **args)
+      @request = request
+      @user = args[:user]
+      @params = args[:params]
+      @object = args[:object]
+      @errors = []
+    end
+
+    def call
+      create_transfer_record if request == 'requesting'
+      update_transfer_record if request == 'updating'
+      approve_transfer_request if request == 'approving'
+      reject_transfer_request if request == 'rejecting'
+
+      return failure_response if @errors.any?
+
+      { success: true, errors: [] }
+    end
+
+    def create_transfer_record
       source_branch = Branch.find_by(id: params[:source_branch_id])
-      destination_branch = user.branch
       product = Product.find_by(id: params[:product_id])
-      quantity = params[:quantity].to_i
+      destination_branch = user.branch
 
-      raise 'Quantity must be greater than zero' if quantity <= 0
+      @errors << 'Source branch not found' if source_branch.nil?
+      @errors << 'Product not found' if product.nil?
+      @errors << 'Quantity must be greater than zero' if params[:quantity].to_i <= 0
+      @errors << 'Cannot transfer to the same branch' if source_branch == destination_branch
 
-      raise 'Cannot transfer to the same branch' if source_branch == destination_branch
+      return if @errors.present?
 
       StockTransferRequest.create!(
         source_branch: source_branch,
         destination_branch: destination_branch,
         product: product,
-        quantity: quantity,
+        quantity: params[:quantity].to_i,
         notes: params[:notes],
         requested_by: user,
         status: :pending
       )
-    rescue StandardError => e
-      # Raise to controller for flash message
-      raise e
     end
 
-    # Approve transfer request
-    def self.approve_transfer(request, approver)
-      raise 'Request is not pending' unless request.pending?
+    def update_transfer_record
+      object.update(params)
+    end
 
-      ActiveRecord::Base.transaction do
-        # Deduct from source branch
-        source_stock = BranchStock.find_by(branch: request.source_branch, product: request.product)
-        raise 'Insufficient stock in source branch' if source_stock.nil? || source_stock.quantity < request.quantity
+    def approve_transfer_request
+      @errors << 'Request is not pending' unless object&.pending?
+      return if @errors.present?
 
-        source_stock.adjust!(-request.quantity, movement_type: :transfer_out, reference: request)
-
-        # Add to destination branch
-        dest_stock = BranchStock.find_or_create_by(branch: request.destination_branch, product: request.product)
-        dest_stock.adjust!(request.quantity, movement_type: :transfer_in, reference: request)
-
-        # Update request status
-        request.update!(status: :approved, approved_by: approver)
+      branch_stock_out = BranchStock.find_by(branch: object.source_branch, product: object.product)
+      if branch_stock_out.nil?
+        @errors << 'Source branch has no stock record'
+        return
       end
-    rescue StandardError => e
-      raise e
+
+      if branch_stock_out.quantity < object.quantity
+        @errors << 'Insufficient stock in source branch'
+        return
+      end
+
+      branch_stock_out.update(quantity: branch_stock_out.quantity - object.quantity)
+      create_movement(:transfer_out, object.quantity, object.source_branch, branch_stock_out.stock)
+
+      branch_stock_in = BranchStock.find_by(branch: object.destination_branch, product: object.product)
+      branch_stock_in.update(quantity: branch_stock_in.quantity + object.quantity)
+      create_movement(:transfer_in, object.quantity, object.destination_branch, branch_stock_in.stock)
+
+      object.update(status: :approved, approved_by: user)
     end
 
-    # Reject transfer request
-    def self.reject_transfer(request, approver)
-      raise 'Request is not pending' unless request.pending?
+    def reject_transfer_request
+      @errors << 'Request is not pending' unless object.pending?
 
-      request.update!(status: :rejected, approved_by: approver)
-    rescue StandardError => e
-      raise e
+      object.update!(status: :rejected, approved_by: user)
+    end
+
+    def create_movement(movement_type, quantity, branch, stock)
+      StockMovement.create(branch:, stock:, product: object.product, quantity:, movement_type:, reference: object)
+    end
+
+    def failure_response
+      { success: false, errors: @errors }
     end
   end
 end

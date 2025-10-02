@@ -16,10 +16,15 @@ class Company
     def create
       @branch_stock = current_user.branch.branch_stocks.new(branch_stock_params)
       @branch_stock.stock_id = fetch_current_stock(branch_stock_params)
-      if @branch_stock.save
+      response = StockMovementService.new(@branch_stock.stock, branch_stock: @branch_stock,
+                                                               product: @branch_stock.product, quantity: @branch_stock.quantity,
+                                                               reference: @branch_stock, branch: @branch_stock.branch).call
+      if response[:success]
+        @branch_stock.save
         flash[:success] = 'Branch Stock was successfully created.'
         redirect_to company_branch_stocks_path
       else
+        flash[:alert] = response[:errors].join(', ')
         render :new
       end
     end
@@ -27,15 +32,24 @@ class Company
     def edit; end
 
     def update
-      if @branch_stock.update(branch_stock_params)
+      @branch_stock.attributes = branch_stock_params
+      return unless @branch_stock.valid?
+
+      response = StockMovementService.new(@branch_stock.stock, branch_stock: @branch_stock,
+                                                               product: @branch_stock.product, quantity: @branch_stock.quantity,
+                                                               reference: @branch_stock, branch: @branch_stock.branch).call
+      if response[:success]
+        @branch_stock.update(branch_stock_params)
         flash[:success] = 'Branch Stock was successfully updated.'
         redirect_to company_branch_stocks_path
       else
+        flash[:alert] = response[:errors].join(', ')
         render :edit
       end
     end
 
     def destroy
+      @branch_stock.stock.update(quantity: @branch_stock.stock.quantity + @branch_stock.quantity)
       @branch_stock.destroy
 
       flash[:success] = 'Branch Stock was successfully deleted.'

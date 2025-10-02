@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# :nodoc:
 class CreateBranches < ActiveRecord::Migration[7.0]
   def change
     create_table :branches do |t|

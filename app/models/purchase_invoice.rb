@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# :nodoc:
 class PurchaseInvoice < ApplicationRecord
   belongs_to :supplier
   has_many :payments

@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
+# :nodoc:
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable,:confirmable, :lockable, :timeoutable, :trackable, timeout_in: 30.minutes
+         :recoverable, :rememberable, :validatable, :confirmable, :lockable, :timeoutable, :trackable, timeout_in: 30.minutes
   belongs_to :company
   belongs_to :branch, optional: true
   has_many :customers, dependent: :destroy

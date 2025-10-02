@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# :nodoc:
 class CreateStockTransferRequests < ActiveRecord::Migration[7.1]
   def change
     create_table :stock_transfer_requests do |t|
