@@ -12,6 +12,9 @@ class Company
 
     def new
       @invoice = current_user.company.invoices.new
+      @invoice.invoice_products.build # build at least one nested product row
+      @products = current_user.company.products # for dropdown in form
+      @customers = current_user.customers
     end
 
     def create
@@ -27,7 +30,9 @@ class Company
       end
     end
 
-    def edit; end
+    def edit
+      @products = current_user.company.products # for dropdown in form
+    end
 
     def update
       if @invoice.update(invoice_params)
@@ -62,11 +67,14 @@ class Company
     private
 
     def invoice_params
-      params.require(:invoice).permit(:customer_id, :user_id, :invoice_number, :date, :due_date, :status, :note)
+      params.require(:invoice).permit(
+        :invoice_number, :date, :due_date, :status, :note, :customer_id,
+        invoice_products_attributes: %i[id product_id quantity unit_price tax total _destroy]
+      )
     end
 
     def set_invoice
-      @invoice = current_user.company.invoices.find(params[:id])
+      @invoice = current_user.company.invoices.includes(invoice_products: :product).find_by(id: params[:id])
       return if @invoice.present?
 
       flash[:alert] = 'Invoice not found.'

@@ -25,6 +25,10 @@
                     Price
                   = f.text_field :price, class: 'form-control', autocomplete: 'off', placeholder: 'Price'
                   = print_error(@product.errors, :price)
+                %div{ class: "col-md-6 form-group #{ error?(@product.errors, :tax_rate) }" }
+                  = f.label :tax_rate, class: 'col-form-label' do
+                    Tax Rate (%)
+                  = f.number_field :tax_rate, class: 'form-control', step: '0.01', min: '0', max: '100', placeholder: 'e.g., 18.0 for 18%'
               .row
                 .col-12.mb-2
                   %a.btn.btn-secondary{href: company_products_path} Cancel

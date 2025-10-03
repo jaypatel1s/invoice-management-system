@@ -1,66 +1,151 @@
-.row
-  .col-md-12.grid-margin.stretch-card
-    .card
-      .card-body
-        = form_with model: [:invoice, @invoice], local: true, html: { multipart: true }, url: url, class: 'form' do |f|
-          .row
-            %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :invoice_number) }" }
-              = f.label :invoice_number, class: 'col-form-label' do
-                Invoice Number
-                %span
-                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Invoice Number' }
-              = f.text_field :invoice_number, class: 'form-control', autocomplete: 'off', placeholder: 'Invoice Number'
-              = print_error(@invoice.errors, :invoice_number)
-            %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :date) }" }
-              = f.label :date, class: 'col-form-label' do
-                Date
-                %span
-                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Date' }
-              = f.text_field :date, class: 'form-control datetimepicker', autocomplete: 'off', placeholder: 'Date'
-              = print_error(@invoice.errors, :date)
-            %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :due_date) }" }
-              = f.label :date, class: 'col-form-label' do
-                Due Date
-                %span
-                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Due Date' }
-              = f.text_field :due_date, class: 'form-control datetimepicker', autocomplete: 'off', placeholder: 'Due Date'
-              = print_error(@invoice.errors, :due_date)
-            %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :status) }" }
-              = f.label :status, class: 'col-form-label' do
-                Status
-                %span
-                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Status' }
-              = f.text_field :status, class: 'form-control', autocomplete: 'off', placeholder: 'Status'
-              = print_error(@invoice.errors, :status)
-          .row
-            %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :note) }" }
-              = f.label :status, class: 'col-form-label' do
-                Note
-                %span
-                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Note' }
-              = f.text_field :note, class: 'form-control', autocomplete: 'off', placeholder: 'Note'
-              = print_error(@invoice.errors, :note)
-            %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :customer_id) }" }
-              = f.label :customer_id, class: 'col-form-label' do
-                Select Customer
-                %span
-                  %i.fa.fa-question-circle-o{ 'data-toggle': 'tooltip', title: 'Note' }
-              = f.select :customer_id, @customers.map { |customer| [customer.name, customer.id] }, {}, class: "form-control"
-              = print_error(@invoice.errors, :customer_id)
-
-          .row.mt-4
-            .col-12
-              = f.submit "Submit", class: "btn btn-primary btn-block"
-
+%section.content
+  .container-fluid
+    .row
+      .col-md-12
+        .card.card-primary
+          .card-header
+            %h3.card-title Basic Details
+          = form_with model: [:company, @invoice], local: true, html: { multipart: true }, class: 'form' do |f|
+            .card-body
+              .row
+                %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :invoice_number) }" }
+                  = f.label :invoice_number, class: 'col-form-label' do
+                    Invoice Number
+                  = f.text_field :invoice_number, class: 'form-control', value: @invoice.invoice_number.presence || 'Will be generated', readonly: true
+                  = print_error(@invoice.errors, :invoice_number)
+                %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :date) }" }
+                  = f.label :date, class: 'col-form-label' do
+                    Date
+                  = f.text_field :date, class: 'form-control datetimepicker', autocomplete: 'off', placeholder: 'Date'
+                  = print_error(@invoice.errors, :date)
+                %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :due_date) }" }
+                  = f.label :due_date, class: 'col-form-label' do
+                    Due Date
+                  = f.text_field :due_date, class: 'form-control datetimepicker', autocomplete: 'off', placeholder: 'Due Date'
+                  = print_error(@invoice.errors, :due_date)
+                %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :status) }" }
+                  = f.label :status, class: 'col-form-label' do
+                    Status
+                  = f.select :status, Invoice.statuses.keys.map { |s| [s.titleize, s] }, { include_blank: 'Select Status' }, class: "form-control"
+                  = print_error(@invoice.errors, :status)
+              .row
+                %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :note) }" }
+                  = f.label :note, class: 'col-form-label' do
+                    Note
+                  = f.text_field :note, class: 'form-control', autocomplete: 'off', placeholder: 'Note'
+                  = print_error(@invoice.errors, :note)
+                %div{ class: "col-md-6 form-group #{ error?(@invoice.errors, :customer_id) }" }
+                  = f.label :customer_id, class: 'col-form-label' do
+                    Select Customer
+                  = f.select :customer_id, @customers.map { |customer| [customer.name, customer.id] }, {}, class: "form-control"
+                  = print_error(@invoice.errors, :customer_id)
+              %h5.mt-3 Invoice Products
+              #invoice-products
+                .table-responsive
+                  %table.table.table-bordered
+                    %thead
+                      %tr
+                        %th Product
+                        %th Quantity
+                        %th Unit Price
+                        %th Tax
+                        %th Tax Amount
+                        %th Total
+                        %th Actions
+                    %tbody#invoice-products-body
+                      = f.fields_for :invoice_products do |ip|
+                        = render 'invoice_product_fields', f: ip
+                .mt-2
+                  = link_to_add_association 'Add Product', f, :invoice_products, class: "btn btn-primary",
+                                            data: { association_insertion_node: '#invoice-products-body',
+                                              association_insertion_method: 'append' }
+              .row.mt-2
+                .col-12.mb-2
+                  %a.btn.btn-secondary{href: company_invoices_path} Cancel
+                  = f.submit "Submit", class: "btn btn-primary float-right"
 - content_for :js_code do
   :javascript
-    $(document).on('turbolinks:load', function(){
+    $(document).ready(function() {
       $('.datetimepicker').daterangepicker({
         singleDatePicker: true,
         showDropdowns: true,
         minDate: moment(),
-        locale: {
-          format: 'DD-MM-YYYY'
+        locale: { format: 'DD-MM-YYYY' }
+      });
+
+      // Product data for auto-populating prices and tax rates
+      var productData = {
+        #{raw @products.map { |p| "#{p.id}: { price: #{p.price.to_f}, tax_rate: #{p.tax_rate.to_f} }" }.join(",\n")}
+      };
+
+      // When product is selected, auto-populate unit price and calculate tax
+      $(document).on('change', '.product-select', function() {
+        var row = $(this).closest('tr');
+        var productId = $(this).val();
+        var unitPriceField = row.find('.unit_price');
+        var taxRateDisplay = row.find('.tax-rate-display');
+        var taxDisplay = row.find('.tax-display');
+        var taxAmountField = row.find('.tax-amount');
+
+        if (productId && productData[productId]) {
+          var product = productData[productId];
+          unitPriceField.val(product.price.toFixed(2));
+          taxRateDisplay.val(product.tax_rate.toFixed(2) + '%');
+
+          // Auto-calculate tax and total
+          calculateTaxAndTotal(row);
+        } else {
+          unitPriceField.val('');
+          taxRateDisplay.val('');
+          taxDisplay.val('');
+          taxAmountField.val('');
+          row.find('.total').val('');
+        }
+      });
+
+      // Calculate tax and total when quantity changes
+      $(document).on('input', '.quantity', function() {
+        var row = $(this).closest('tr');
+        calculateTaxAndTotal(row);
+      });
+
+      function calculateTaxAndTotal(row) {
+        var qty = parseFloat(row.find('.quantity').val()) || 0;
+        var price = parseFloat(row.find('.unit_price').val()) || 0;
+        var taxRateDisplay = row.find('.tax-rate-display').val();
+        var taxRate = parseFloat(taxRateDisplay) || 0;
+
+        var subtotal = qty * price;
+        var taxAmount = subtotal * (taxRate / 100);
+
+        // Update both display and hidden tax fields
+        row.find('.tax-display').val(taxAmount.toFixed(2));
+        row.find('.tax-amount').val(taxAmount.toFixed(2));
+
+        calculateTotal(row);
+      }
+
+      function calculateTotal(row) {
+        var qty = parseFloat(row.find('.quantity').val()) || 0;
+        var price = parseFloat(row.find('.unit_price').val()) || 0;
+        var taxAmount = parseFloat(row.find('.tax-display').val()) || 0;
+
+        var subtotal = qty * price;
+        var total = subtotal + taxAmount;
+
+        row.find('.total').val(total.toFixed(2));
+      }
+
+      // Initialize calculations for existing rows
+      $('tr.nested-fields').each(function() {
+        var row = $(this);
+        var productId = row.find('.product-select').val();
+
+        if (productId && productData[productId]) {
+          var product = productData[productId];
+          row.find('.unit_price').val(product.price.toFixed(2));
+          row.find('.tax-rate-display').val(product.tax_rate.toFixed(2) + '%');
+          calculateTaxAndTotal(row);
         }
       });
     });

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 20_251_001_162_148) do
+ActiveRecord::Schema[7.1].define(version: 20_251_003_183_111) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'plpgsql'
 
@@ -62,17 +62,30 @@ ActiveRecord::Schema[7.1].define(version: 20_251_001_162_148) do
     t.index ['user_id'], name: 'index_customers_on_user_id'
   end
 
+  create_table 'invoice_products', force: :cascade do |t|
+    t.bigint 'invoice_id', null: false
+    t.bigint 'product_id', null: false
+    t.integer 'quantity', default: 1
+    t.decimal 'unit_price', precision: 10, scale: 2
+    t.decimal 'tax', precision: 10, scale: 2, default: '0.0'
+    t.decimal 'total', precision: 12, scale: 2
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['invoice_id'], name: 'index_invoice_products_on_invoice_id'
+    t.index ['product_id'], name: 'index_invoice_products_on_product_id'
+  end
+
   create_table 'invoices', force: :cascade do |t|
     t.string 'invoice_number'
     t.date 'date'
     t.date 'due_date'
-    t.string 'status'
     t.text 'note'
     t.bigint 'company_id', null: false
     t.bigint 'customer_id', null: false
     t.bigint 'user_id', null: false
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.integer 'status', default: 0, null: false
     t.index ['company_id'], name: 'index_invoices_on_company_id'
     t.index ['customer_id'], name: 'index_invoices_on_customer_id'
     t.index ['user_id'], name: 'index_invoices_on_user_id'
@@ -131,6 +144,7 @@ ActiveRecord::Schema[7.1].define(version: 20_251_001_162_148) do
     t.bigint 'company_id', null: false
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.decimal 'tax_rate', precision: 5, scale: 2, default: '0.0'
     t.index ['company_id'], name: 'index_products_on_company_id'
   end
 
@@ -249,6 +263,8 @@ ActiveRecord::Schema[7.1].define(version: 20_251_001_162_148) do
   add_foreign_key 'branches', 'companies'
   add_foreign_key 'customers', 'companies'
   add_foreign_key 'customers', 'users'
+  add_foreign_key 'invoice_products', 'invoices'
+  add_foreign_key 'invoice_products', 'products'
   add_foreign_key 'invoices', 'companies'
   add_foreign_key 'invoices', 'customers'
   add_foreign_key 'invoices', 'users'

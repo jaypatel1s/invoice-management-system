@@ -1,14 +1,12 @@
-.content-wrapper
-  .page-header.row
-    .col-md-7
-      %h3.page-title
-        %span.page-title-icon.bg-primary.text-white.mr-2
-          %i.fa.fa-file
-        Invoice
-        %small
-          %i.fa.fa-arrow-right
-          New
-    .col-md-5.mt-2.mt-md-0.text-right
-      %a.btn.btn-sm.btn-success{ href: company_invoices_path, data: {toggle: 'tooltip', placement: 'left'}, title: 'Invoices' }
-        %i.fa.fa-reply
-  = render 'form', invoice: @invoice, url: company_invoice_path(@invoice.id)
+.content-wrapper{style: "min-height: 1604.44px;"}
+  %section.content-header
+    .container-fluid
+      .row.mb-2
+        .col-sm-6
+          %h1 Invoice / Edit
+        .col-sm-6
+          %ol.breadcrumb.float-sm-right
+            %a.btn.btn-sm.btn-primary{ href: company_invoices_path, data: { toggle: 'tooltip', placement: 'left '}, title: 'Invoices' }
+              %i.fa.fa-reply
+
+  = render 'form', invoice: @invoice

@@ -17,7 +17,7 @@
             %thead
               %tr
                 %th Name
-                %th Description
+                %th Tax Rate (%)
                 %th Price
                 - if can_access?(:products, :edit) || can_access?(:products, :destroy) || can_access?(:products, :show)
                   %th.text-right{ width: '20%' } Actions
@@ -25,7 +25,7 @@
               - @products.each do |product|
                 %tr
                   %td= product.name
-                  %td= product.description
+                  %td= product.tax_rate
                   %td= product.price
                   - if can_access?(:products, :edit) || can_access?(:products, :destroy) || can_access?(:products, :show)
                     %td.project-actions.text-right

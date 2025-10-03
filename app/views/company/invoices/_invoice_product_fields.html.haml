@@ -1,0 +1,35 @@
+%tr.nested-fields
+  %td
+    = f.select :product_id,
+              options_from_collection_for_select(@products, :id, :name, f.object.product_id),
+              { include_blank: "Select Product" },
+              class: "form-control product-select"
+  %td
+    = f.number_field :quantity,
+                    class: 'form-control quantity',
+                    step: '1',
+                    min: '1',
+                    placeholder: 'Quantity'
+  %td
+    = f.number_field :unit_price,
+                    class: 'form-control unit_price',
+                    step: '0.01',
+                    min: '0',
+                    placeholder: 'Unit Price',
+                    readonly: true
+  %td
+    %input.form-control.tax-rate-display{ type: "text", readonly: true, placeholder: "Tax Rate %" }
+    = f.hidden_field :tax, class: 'tax-amount'
+  %td
+    = f.number_field :tax,
+                    class: 'form-control tax-display',
+                    readonly: true,
+                    placeholder: 'Tax Amount'
+  %td
+    = f.number_field :total,
+                    class: 'form-control total',
+                    readonly: true,
+                    placeholder: 'Total'
+  %td
+    = link_to_remove_association f, class: 'btn btn-danger btn-sm' do
+      %i.fas.fa-trash
